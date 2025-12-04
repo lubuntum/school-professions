@@ -1,4 +1,4 @@
-package com.profession.suggest.database.entities.account.role;
+package com.profession.suggest.database.entities.auth.role;
 
 public enum RoleEnum {
     ADMIN,

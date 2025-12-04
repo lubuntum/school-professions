@@ -1,8 +1,10 @@
-package com.profession.suggest.database.entities.account.role;
+package com.profession.suggest.database.entities.auth.role;
 
-import com.profession.suggest.database.entities.account.Account;
+import com.profession.suggest.database.entities.auth.Account;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +12,8 @@ import java.util.Set;
 @Entity
 @Table(name = "role")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
