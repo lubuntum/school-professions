@@ -1,5 +1,6 @@
 package com.profession.suggest.database.entities.pupil;
 
+import com.profession.suggest.database.entities.gender.Gender;
 import com.profession.suggest.database.entities.auth.Account;
 import com.profession.suggest.database.entities.dataanalys.psychtests.PsychTest;
 import jakarta.persistence.*;
@@ -7,16 +8,17 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Table(name = "pupil")
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"account", "gender"})
+@EqualsAndHashCode(exclude = {"account", "gender"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pupil {
@@ -54,13 +56,17 @@ public class Pupil {
     @Size(max = 50, message = "Nationality must not exceed 50 characters")
     @Column(name = "nationality", length = 50)
     private String nationality;
-
     @Size(max = 1000, message = "Extra activities must not exceed 1000 characters")
     @Column(name = "extra_activities", columnDefinition = "TEXT")
     private String extraActivities;
+    @Column(name = "class_name", length = 5)
+    private String className;
 
     @Column(name = "created_at", updatable = false)
     private LocalDate createdAt;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "gender_id")
+    private Gender gender;
 
     @OneToOne(mappedBy = "pupil", cascade = CascadeType.ALL,
                 fetch = FetchType.LAZY, optional = false)

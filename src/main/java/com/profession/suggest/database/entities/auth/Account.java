@@ -3,9 +3,7 @@ package com.profession.suggest.database.entities.auth;
 import com.profession.suggest.database.entities.auth.role.Role;
 import com.profession.suggest.database.entities.pupil.Pupil;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -13,7 +11,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "account")
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"pupil", "roles"})
+@EqualsAndHashCode(exclude = {"pupil", "roles"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account {

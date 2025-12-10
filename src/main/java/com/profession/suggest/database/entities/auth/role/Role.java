@@ -2,16 +2,17 @@ package com.profession.suggest.database.entities.auth.role;
 
 import com.profession.suggest.database.entities.auth.Account;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "role")
-@Data
+@Getter
+@Setter
+@ToString(exclude = "accounts")
+@EqualsAndHashCode(exclude = "accounts")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Role {
