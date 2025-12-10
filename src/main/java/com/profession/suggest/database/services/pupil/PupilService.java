@@ -3,10 +3,12 @@ package com.profession.suggest.database.services.pupil;
 import com.profession.suggest.database.entities.auth.Account;
 import com.profession.suggest.database.entities.auth.role.Role;
 import com.profession.suggest.database.entities.auth.role.RoleEnum;
+import com.profession.suggest.database.entities.gender.Gender;
 import com.profession.suggest.database.entities.pupil.Pupil;
 import com.profession.suggest.database.repositories.pupil.PupilRepository;
 import com.profession.suggest.database.services.auth.AccountService;
 import com.profession.suggest.database.services.auth.role.RoleService;
+import com.profession.suggest.database.services.gender.GenderService;
 import com.profession.suggest.dto.auth.AccountApiRegisterDTO;
 import com.profession.suggest.dto.auth.AccountMapper;
 import com.profession.suggest.dto.pupil.PupilDTO;
@@ -26,6 +28,7 @@ import java.util.List;
 public class PupilService {
     private final PupilRepository repository;
     private final AccountService accountService;
+    private final GenderService genderService;
     private final RoleService roleService;
     private final PupilMapper pupilMapper;
     private final AccountMapper accountMapper;
@@ -41,6 +44,8 @@ public class PupilService {
         Pupil pupil = pupilMapper.fromDTO(accountApiRegisterDTO.getPupilDTO());
         Account account = accountMapper.fromDTO(accountApiRegisterDTO.getAccountRegisterRequestDTO());
         Role role = roleService.findByName(RoleEnum.PUPIL);
+        Gender gender = genderService.findGenderByName(accountApiRegisterDTO.getPupilDTO().getGender());
+        pupil.setGender(gender);
         pupil.setAccount(account);
         account.setPupil(pupil);
 

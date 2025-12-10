@@ -1,5 +1,6 @@
 package com.profession.suggest.dto.pupil;
 
+import com.profession.suggest.database.entities.gender.GenderEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -39,4 +40,8 @@ public class PupilDTO {
 
     @Size(max = 500, message = "Extra activities description is too long")
     private String extraActivities;
+    @Size(max = 5, message = "Class name is too long")
+    private String className;
+    @NotNull(message = "Gender is required")
+    private GenderEnum gender;
 }

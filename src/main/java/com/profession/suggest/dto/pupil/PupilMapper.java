@@ -15,6 +15,7 @@ public class PupilMapper {
         pupil.setHealthCondition(dto.getHealthCondition());
         pupil.setNationality(dto.getNationality());
         pupil.setExtraActivities(dto.getExtraActivities());
+        pupil.setClassName(dto.getClassName());
         return pupil;
     }
 }
