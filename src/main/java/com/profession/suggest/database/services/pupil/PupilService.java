@@ -40,7 +40,7 @@ public class PupilService {
         return repository.save(pupil);
     }
     @Transactional
-    public Pupil createWithAccount(AccountApiRegisterDTO accountApiRegisterDTO) {
+    public PupilDTO createWithAccount(AccountApiRegisterDTO accountApiRegisterDTO) {
         Pupil pupil = pupilMapper.fromDTO(accountApiRegisterDTO.getPupilDTO());
         Account account = accountMapper.fromDTO(accountApiRegisterDTO.getAccountRegisterRequestDTO());
         Role role = roleService.findByName(RoleEnum.PUPIL);
@@ -52,7 +52,7 @@ public class PupilService {
         if (account.getRoles() == null) account.setRoles(new HashSet<>());
         account.getRoles().add(role);
 
-        return repository.save(pupil);
+        return pupilMapper.toDTO(repository.save(pupil));
     }
     public Page<PupilResponseDTO> getPupilsData(Pageable pageable) {
         return repository.findPupilsData(pageable);

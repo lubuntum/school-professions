@@ -18,4 +18,18 @@ public class PupilMapper {
         pupil.setClassName(dto.getClassName());
         return pupil;
     }
+    public PupilDTO toDTO(Pupil pupil) {
+        PupilDTO dto = new PupilDTO();
+        dto.setName(pupil.getName());
+        dto.setSurname(pupil.getSurname());
+        dto.setPatronymic(pupil.getPatronymic());
+        dto.setBirthday(pupil.getBirthday());
+        dto.setSchool(pupil.getSchool());
+        dto.setHealthCondition(pupil.getHealthCondition());
+        dto.setNationality(pupil.getNationality());
+        dto.setExtraActivities(pupil.getExtraActivities());
+        dto.setClassName(pupil.getClassName());
+        dto.setGender(pupil.getGender().getName());
+        return dto;
+    }
 }
