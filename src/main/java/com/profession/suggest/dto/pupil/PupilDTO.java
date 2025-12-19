@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PupilDTO {
+    private Long id;
     @NotBlank(message = "Name is required")
     @Size(min = 2, max = 50, message = "Name must be 2-50 characters")
     private String name;

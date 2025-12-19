@@ -20,6 +20,7 @@ public class PupilMapper {
     }
     public PupilDTO toDTO(Pupil pupil) {
         PupilDTO dto = new PupilDTO();
+        dto.setId(pupil.getId());
         dto.setName(pupil.getName());
         dto.setSurname(pupil.getSurname());
         dto.setPatronymic(pupil.getPatronymic());
