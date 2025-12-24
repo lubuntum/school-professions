@@ -54,6 +54,14 @@ public class PupilService {
 
         return pupilMapper.toDTO(repository.save(pupil));
     }
+
+    public void createAllWithAccount(List<AccountApiRegisterDTO> accounts) {
+        try {
+            accounts.forEach(this::createWithAccount);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
     public Page<PupilResponseDTO> getPupilsData(Pageable pageable) {
         return repository.findPupilsData(pageable);
     }

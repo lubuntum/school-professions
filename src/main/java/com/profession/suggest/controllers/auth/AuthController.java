@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -23,6 +25,11 @@ public class AuthController {
     @PostMapping("/auto-register")
     public ResponseEntity<PupilDTO> autoRegister(@Valid @RequestBody AccountApiRegisterDTO accountApiRegisterDTO) {
         return ResponseEntity.ok(pupilService.createWithAccount(accountApiRegisterDTO));
+    }
+    @PostMapping("/auto-register-all")
+    public ResponseEntity<String> autoRegisterAll(@RequestBody List<AccountApiRegisterDTO> accountApiRegisterDTOList) {
+        pupilService.createAllWithAccount(accountApiRegisterDTOList);
+        return ResponseEntity.ok("OK");
     }
 
 }
