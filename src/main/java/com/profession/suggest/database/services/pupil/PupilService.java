@@ -44,15 +44,16 @@ public class PupilService {
         Pupil pupil = pupilMapper.fromDTO(accountApiRegisterDTO.getPupilDTO());
         Account account = accountMapper.fromDTO(accountApiRegisterDTO.getAccountRegisterRequestDTO());
         Role role = roleService.findByName(RoleEnum.PUPIL);
-        Gender gender = genderService.findGenderByName(accountApiRegisterDTO.getPupilDTO().getGender());
-        pupil.setGender(gender);
-        pupil.setAccount(account);
-        account.setPupil(pupil);
-
         if (account.getRoles() == null) account.setRoles(new HashSet<>());
         account.getRoles().add(role);
+        Account savedAccount = accountService.createAccount(account);
+        Gender gender = genderService.findGenderByName(accountApiRegisterDTO.getPupilDTO().getGender());
+        pupil.setGender(gender);
+        pupil.setAccount(savedAccount);
+        savedAccount.setPupil(pupil);
 
-        return pupilMapper.toDTO(repository.save(pupil));
+        Pupil savedPupil = repository.save(pupil);
+        return pupilMapper.toDTO(savedPupil);
     }
 
     public void createAllWithAccount(List<AccountApiRegisterDTO> accounts) {
@@ -64,5 +65,8 @@ public class PupilService {
     }
     public Page<PupilResponseDTO> getPupilsData(Pageable pageable) {
         return repository.findPupilsData(pageable);
+    }
+    public PupilResponseDTO getPupilData(Long id) {
+        return repository.findPupilData(id);
     }
 }

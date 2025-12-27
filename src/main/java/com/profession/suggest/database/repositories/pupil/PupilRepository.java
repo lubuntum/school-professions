@@ -17,4 +17,13 @@ public interface PupilRepository extends JpaRepository<Pupil, Long> {
             "JOIN Account a ON p.account.id = a.id " +
             "LEFT JOIN p.gender g")
     Page<PupilResponseDTO> findPupilsData(Pageable pageable);
+
+    @Query("SELECT new com.profession.suggest.dto.pupil.PupilResponseDTO(" +
+            "p.id, p.name, p.surname, p.patronymic, p.birthday, p.school, " +
+            "p.healthCondition, p.nationality, p.extraActivities, p.className, g.name, a.email) " +
+            "FROM Pupil p " +
+            "JOIN Account a ON p.account.id = a.id " +
+            "LEFT JOIN p.gender g " +
+            "WHERE p.id = :id")
+    PupilResponseDTO findPupilData(Long id);
 }
