@@ -68,8 +68,9 @@ public class Pupil {
     @JoinColumn(name = "gender_id")
     private Gender gender;
 
-    @OneToOne(mappedBy = "pupil", cascade = CascadeType.ALL,
-                fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_id", unique = true)
+    @MapsId
     private Account account;
     //OneToMany List PsychTests
     @OneToMany(mappedBy = "pupil", cascade = CascadeType.ALL, orphanRemoval = true)

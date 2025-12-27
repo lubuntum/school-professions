@@ -30,11 +30,8 @@ public class Account {
     @Column(name = "created_at")
     private LocalDate createdAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    @JoinColumn(name = "id")
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
     private Pupil pupil;
-
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "account_roles",
