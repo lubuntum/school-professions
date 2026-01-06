@@ -30,7 +30,7 @@ public class Account {
     @Column(name = "created_at")
     private LocalDate createdAt;
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY, optional = true)
     private Pupil pupil;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(

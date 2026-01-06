@@ -59,8 +59,10 @@ public class Pupil {
     @Size(max = 1000, message = "Extra activities must not exceed 1000 characters")
     @Column(name = "extra_activities", columnDefinition = "TEXT")
     private String extraActivities;
-    @Column(name = "class_name", length = 5)
-    private String className;
+    @Column(name = "class_number")
+    private Integer classNumber;
+    @Column(name = "class_label")
+    private String classLabel;
 
     @Column(name = "created_at", updatable = false)
     private LocalDate createdAt;
@@ -68,9 +70,8 @@ public class Pupil {
     @JoinColumn(name = "gender_id")
     private Gender gender;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", unique = true)
-    @MapsId
     private Account account;
     //OneToMany List PsychTests
     @OneToMany(mappedBy = "pupil", cascade = CascadeType.ALL, orphanRemoval = true)
