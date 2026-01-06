@@ -41,8 +41,9 @@ public class PupilDTO {
 
     @Size(max = 500, message = "Extra activities description is too long")
     private String extraActivities;
-    @Size(max = 5, message = "Class name is too long")
-    private String className;
+    private Integer classNumber;
+    @Size(max = 5, message = "Class label is too long")
+    private String classLabel;
     @NotNull(message = "Gender is required")
     private GenderEnum gender;
 }

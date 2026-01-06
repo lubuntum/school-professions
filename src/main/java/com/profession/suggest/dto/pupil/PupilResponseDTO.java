@@ -15,8 +15,8 @@ public class PupilResponseDTO {
     public String email;
     public PupilResponseDTO(Long id, String name, String surname, String patronymic,
                             LocalDate birthday, String school, String healthCondition,
-                            String nationality, String extraActivities, String className, GenderEnum gender, String email) {
-        this.pupilDTO = new PupilDTO(id, name, surname, patronymic, birthday, school, healthCondition, nationality, extraActivities, className, gender);
+                            String nationality, String extraActivities, Integer classNumber, String classLabel, GenderEnum gender, String email) {
+        this.pupilDTO = new PupilDTO(id, name, surname, patronymic, birthday, school, healthCondition, nationality, extraActivities, classNumber, classLabel, gender);
         this.email = email;
     }
 }

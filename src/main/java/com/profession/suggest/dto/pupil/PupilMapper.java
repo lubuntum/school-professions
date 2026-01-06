@@ -15,7 +15,8 @@ public class PupilMapper {
         pupil.setHealthCondition(dto.getHealthCondition());
         pupil.setNationality(dto.getNationality());
         pupil.setExtraActivities(dto.getExtraActivities());
-        pupil.setClassName(dto.getClassName());
+        pupil.setClassNumber(dto.getClassNumber());
+        pupil.setClassLabel(dto.getClassLabel());
         return pupil;
     }
     public PupilDTO toDTO(Pupil pupil) {
@@ -29,7 +30,8 @@ public class PupilMapper {
         dto.setHealthCondition(pupil.getHealthCondition());
         dto.setNationality(pupil.getNationality());
         dto.setExtraActivities(pupil.getExtraActivities());
-        dto.setClassName(pupil.getClassName());
+        dto.setClassNumber(pupil.getClassNumber());
+        dto.setClassLabel(pupil.getClassLabel());
         dto.setGender(pupil.getGender().getName());
         return dto;
     }
