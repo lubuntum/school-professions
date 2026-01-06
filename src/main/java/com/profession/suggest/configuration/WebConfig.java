@@ -16,7 +16,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtValidationInterceptor)
                 .addPathPatterns(
                         "/api/auth/protected-test",
-                        "/api/pupils/pupil-by-id"
+                        "/api/pupils/by-pupil-id",
+                        "/api/pupils/pupil-data",
+                        "/api/psych-tests/by-pupil"
                 );
     }
 }
