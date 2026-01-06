@@ -50,7 +50,6 @@ public class PupilService {
         Gender gender = genderService.findGenderByName(accountApiRegisterDTO.getPupilDTO().getGender());
         pupil.setGender(gender);
         pupil.setAccount(savedAccount);
-        savedAccount.setPupil(pupil);
 
         Pupil savedPupil = repository.save(pupil);
         return pupilMapper.toDTO(savedPupil);
