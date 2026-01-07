@@ -29,7 +29,7 @@ public class PsychTestPupilRequestMapper {
     public PsychTestPupilRequestDTO toDTO(PsychTest psychTest){
         PsychTestPupilRequestDTO dto = new PsychTestPupilRequestDTO();
         dto.setCompletionTimeSeconds(psychTest.getCompletionTimeSeconds());
-        dto.setTestTypeName(dto.getTestTypeName());
+        dto.setTestTypeName(psychTest.getPsychTestType().getName());
         dto.setPsychParams(psychTest.getPsychParams().stream().map(psychParamMapper::toDTO).collect(Collectors.toList()));
         return dto;
     }
