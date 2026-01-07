@@ -25,7 +25,13 @@ public class PsychTestPupilRequestMapper {
                         .map(psychParamMapper::fromDTO)
                         .collect(Collectors.toSet()));
         return psychTest;
-
+    }
+    public PsychTestPupilRequestDTO toDTO(PsychTest psychTest){
+        PsychTestPupilRequestDTO dto = new PsychTestPupilRequestDTO();
+        dto.setCompletionTimeSeconds(psychTest.getCompletionTimeSeconds());
+        dto.setTestTypeName(dto.getTestTypeName());
+        dto.setPsychParams(psychTest.getPsychParams().stream().map(psychParamMapper::toDTO).collect(Collectors.toList()));
+        return dto;
     }
 
 }

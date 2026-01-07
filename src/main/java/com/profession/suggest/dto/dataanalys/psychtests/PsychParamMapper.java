@@ -19,4 +19,10 @@ public class PsychParamMapper {
         psychParam.setPsychParamName(psychParamNameService.getPsychParamNameByName(dto.getName()));
         return psychParam;
     }
+    public PsychParamDTO toDTO (PsychParam psychParam) {
+        PsychParamDTO dto = new PsychParamDTO();
+        dto.setParam(psychParam.getParam());
+        dto.setName(psychParam.getPsychParamName().getName());
+        return dto;
+    }
 }
