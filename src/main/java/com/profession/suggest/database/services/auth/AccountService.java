@@ -7,6 +7,7 @@ import com.profession.suggest.database.repositories.auth.AccountRepository;
 import com.profession.suggest.database.services.auth.role.RoleService;
 import com.profession.suggest.dto.auth.AccountDTO;
 import com.profession.suggest.dto.auth.AccountRegisterRequestDTO;
+import com.profession.suggest.dto.pupil.PupilResponseDTO;
 import com.profession.suggest.services.jwt.JWTService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,11 @@ public class AccountService {
             account.setRoles(new HashSet<>());
         account.getRoles().add(role);
         return repository.save(account).getEmail();
+    }
+    public PupilResponseDTO getPupilDataByAccountId(Long id) {
+        return repository.findPupilDataByAccountId(id);
+    }
+    public Account getAccountById(Long id) throws AccountNotFoundException {
+        return repository.findById(id).orElseThrow(() -> new AccountNotFoundException("ss"));
     }
 }
