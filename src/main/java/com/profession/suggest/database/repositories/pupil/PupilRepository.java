@@ -26,4 +26,5 @@ public interface PupilRepository extends JpaRepository<Pupil, Long> {
             "LEFT JOIN p.gender g " +
             "WHERE p.id = :id")
     PupilResponseDTO findPupilData(Long id);
+    Pupil findByAccountId(Long accountId);
 }

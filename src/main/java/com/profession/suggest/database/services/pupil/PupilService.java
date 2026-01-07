@@ -17,9 +17,12 @@ import com.profession.suggest.dto.pupil.PupilResponseDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
+
+import javax.security.auth.login.AccountNotFoundException;
 import java.util.HashSet;
 import java.util.List;
 
@@ -35,6 +38,9 @@ public class PupilService {
 
     public Pupil getPupilById(Long id) {
         return repository.getReferenceById(id);
+    }
+    public Pupil getPupilByAccountId(Long accountId) {
+        return repository.findByAccountId(accountId);
     }
     public Pupil create(Pupil pupil) {
         return repository.save(pupil);
@@ -61,6 +67,18 @@ public class PupilService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+    public PupilDTO updatePupilData(PupilDTO pupilDTO, Long accountId) throws AccountNotFoundException {
+        Pupil pupil = getPupilByAccountId(accountId);
+        Account account = accountService.getAccountById(accountId);
+        Gender gender = genderService.findGenderByName(pupilDTO.getGender());
+        if (pupil == null) {
+            pupil = new Pupil();
+            pupil.setGender(gender);
+            pupil.setAccount(account);
+        }
+        pupil = pupilMapper.updateFromDTO(pupil, pupilDTO);
+        return pupilMapper.toDTO(repository.save(pupil));
     }
     public Page<PupilResponseDTO> getPupilsData(Pageable pageable) {
         return repository.findPupilsData(pageable);

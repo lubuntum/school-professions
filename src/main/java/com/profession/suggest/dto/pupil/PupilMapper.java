@@ -3,6 +3,8 @@ package com.profession.suggest.dto.pupil;
 import com.profession.suggest.database.entities.pupil.Pupil;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class PupilMapper {
     public Pupil fromDTO(PupilDTO dto) {
@@ -34,5 +36,18 @@ public class PupilMapper {
         dto.setClassLabel(pupil.getClassLabel());
         dto.setGender(pupil.getGender().getName());
         return dto;
+    }
+    public Pupil updateFromDTO(Pupil pupil, PupilDTO dto) {
+        Optional.ofNullable(dto.getName()).ifPresent(pupil::setName);
+        Optional.ofNullable(dto.getSurname()).ifPresent(pupil::setSurname);
+        Optional.ofNullable(dto.getPatronymic()).ifPresent(pupil::setPatronymic);
+        Optional.ofNullable(dto.getBirthday()).ifPresent(pupil::setBirthday);
+        Optional.ofNullable(dto.getSchool()).ifPresent(pupil::setSchool);
+        Optional.ofNullable(dto.getHealthCondition()).ifPresent(pupil::setHealthCondition);
+        Optional.ofNullable(dto.getNationality()).ifPresent(pupil::setNationality);
+        Optional.ofNullable(dto.getExtraActivities()).ifPresent(pupil::setExtraActivities);
+        Optional.ofNullable(dto.getClassNumber()).ifPresent(pupil::setClassNumber);
+        Optional.ofNullable(dto.getClassLabel()).ifPresent(pupil::setClassLabel);
+        return pupil;
     }
 }

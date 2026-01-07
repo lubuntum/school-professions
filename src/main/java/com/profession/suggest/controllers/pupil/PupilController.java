@@ -2,6 +2,7 @@ package com.profession.suggest.controllers.pupil;
 
 import com.profession.suggest.database.services.auth.AccountService;
 import com.profession.suggest.database.services.pupil.PupilService;
+import com.profession.suggest.dto.pupil.PupilDTO;
 import com.profession.suggest.dto.pupil.PupilResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.security.auth.login.AccountNotFoundException;
 
 /**
  * TODO
@@ -39,15 +42,13 @@ public class PupilController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDir.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy));
     return ResponseEntity.ok(pupilService.getPupilsData(pageable));
     }
-    @GetMapping("/by-pupil-id")
-    public ResponseEntity<PupilResponseDTO> getPupilData(@RequestAttribute("id") Long id) {
-        PupilResponseDTO pupilResponseDTO = pupilService.getPupilData(id);
-
-        return ResponseEntity.ok(pupilService.getPupilData(id));
-    }
     @GetMapping("/pupil-data")
-    public ResponseEntity<PupilResponseDTO> getPupilDataByAccount(@RequestAttribute("id") Long id) {
-        return ResponseEntity.ok(accountService.getPupilDataByAccountId(id));
+    public ResponseEntity<PupilResponseDTO> getPupilDataByAccount(@RequestAttribute("accountId") Long accountId) {
+        return ResponseEntity.ok(accountService.getPupilDataByAccountId(accountId));
+    }
+    @PostMapping("/update-pupil-data")
+    public ResponseEntity<PupilDTO> updatePupilData(@RequestBody PupilDTO dto , @RequestAttribute("accountId") Long accountId) throws AccountNotFoundException {
+        return ResponseEntity.ok(pupilService.updatePupilData(dto, accountId));
     }
 
 }
