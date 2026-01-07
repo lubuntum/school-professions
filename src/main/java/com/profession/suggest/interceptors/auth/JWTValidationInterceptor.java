@@ -29,7 +29,7 @@ public class JWTValidationInterceptor implements HandlerInterceptor {
                     return false;
                 }
 
-                request.setAttribute("id", Long.valueOf(jwtService.extractSubject(token)));
+                request.setAttribute("accountId", Long.valueOf(jwtService.extractSubject(token)));
 
                 JWTAuth jwtAuth = new JWTAuth(jwtToken);
                 SecurityContextHolder.getContext().setAuthentication(jwtAuth);
