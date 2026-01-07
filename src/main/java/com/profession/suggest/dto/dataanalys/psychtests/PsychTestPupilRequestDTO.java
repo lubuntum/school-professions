@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class PsychTestPupilRequestDTO {
     private Double completionTimeSeconds;
-    private Long pupilId;
     private List<PsychParamDTO> psychParams;
     private String testTypeName;
 }
