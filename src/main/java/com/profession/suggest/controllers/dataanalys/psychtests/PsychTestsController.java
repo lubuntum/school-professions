@@ -6,10 +6,9 @@ import com.profession.suggest.database.services.dataanalys.psychtests.PsychTestS
 import com.profession.suggest.database.services.dataanalys.psychtests.PsychTestTypeService;
 import com.profession.suggest.dto.dataanalys.psychtests.PsychTestPupilRequestDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/psych-tests")
@@ -24,9 +23,16 @@ public class PsychTestsController {
     }
 
     @PostMapping("/create-test")
-    public ResponseEntity<String> createPsychTestForPupil(@RequestBody PsychTestPupilRequestDTO requestDTO) {
-        psychTestService.createPsychTestForPupil(requestDTO);
+    public ResponseEntity<String> createPsychTestForPupil(@RequestBody PsychTestPupilRequestDTO requestDTO, @RequestAttribute("accountId") Long accountId) {
+        psychTestService.createPsychTestForPupil(requestDTO, accountId);
         return ResponseEntity.ok("Test created");
+    }
+    //**
+    // TODO 1. fix testTypeName null somehow
+    // */
+    @GetMapping("/by-pupil")
+    public ResponseEntity<List<PsychTestPupilRequestDTO>> getPsychTestsByPupilId(@RequestAttribute("accountId") Long accountId) {
+        return ResponseEntity.ok(psychTestService.getTestsByPupil(accountId));
     }
 
 }
