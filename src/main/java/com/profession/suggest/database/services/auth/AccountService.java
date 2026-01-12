@@ -9,6 +9,7 @@ import com.profession.suggest.dto.auth.AccountDTO;
 import com.profession.suggest.dto.auth.AccountRegisterRequestDTO;
 import com.profession.suggest.dto.pupil.PupilResponseDTO;
 import com.profession.suggest.services.jwt.JWTService;
+import org.apache.coyote.BadRequestException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,10 +45,10 @@ public class AccountService {
         return jwtService.generateToken(String.valueOf(account.getId()));
     }
     @Transactional
-    public String registration(AccountRegisterRequestDTO accountRegisterRequestDTO) {
+    public String registration(AccountRegisterRequestDTO accountRegisterRequestDTO) throws BadRequestException {
         if (accountRegisterRequestDTO == null || accountRegisterRequestDTO.getEmail() == null
                 || accountRegisterRequestDTO.getPassword() == null)
-            throw new IllegalArgumentException("Fill all fields");
+            throw new BadRequestException("Fill all fields");
         if (!isEmailFree(accountRegisterRequestDTO.getEmail()))
             throw new IllegalArgumentException("Email already in use");
         Account account = new Account();

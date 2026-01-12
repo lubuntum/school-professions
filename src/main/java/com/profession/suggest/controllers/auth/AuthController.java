@@ -8,6 +8,8 @@ import com.profession.suggest.dto.auth.AccountRegisterRequestDTO;
 import com.profession.suggest.dto.pupil.PupilDTO;
 import com.profession.suggest.services.jwt.JWTService;
 import jakarta.validation.Valid;
+import org.apache.coyote.BadRequestException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,12 +40,24 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody AccountRegisterRequestDTO account) {
-        return ResponseEntity.ok(accountService.registration(account));
+    public ResponseEntity<String> register(@RequestBody AccountRegisterRequestDTO account) throws BadRequestException {
+        try {
+            return ResponseEntity.ok(accountService.registration(account));
+        } catch (BadRequestException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("please check all fields");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("email already in use");
+        }
+
     }
-    @GetMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AccountDTO account) throws AccountNotFoundException {
-        return ResponseEntity.ok(accountService.login(account));
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody AccountDTO account) {
+        try {
+            return ResponseEntity.ok(accountService.login(account));
+        } catch (AccountNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("please check login or password");
+        }
+
     }
     @PostMapping("/protected-test")
     public ResponseEntity<String> testProtectedRoute(){
