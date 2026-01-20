@@ -7,6 +7,7 @@ import com.profession.suggest.database.repositories.auth.AccountRepository;
 import com.profession.suggest.database.services.auth.role.RoleService;
 import com.profession.suggest.dto.auth.AccountDTO;
 import com.profession.suggest.dto.auth.AccountRegisterRequestDTO;
+import com.profession.suggest.dto.auth.RoleDTO;
 import com.profession.suggest.dto.pupil.PupilResponseDTO;
 import com.profession.suggest.services.jwt.JWTService;
 import org.apache.coyote.BadRequestException;
@@ -16,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
@@ -66,5 +69,10 @@ public class AccountService {
     }
     public Account getAccountById(Long id) throws AccountNotFoundException {
         return repository.findById(id).orElseThrow(() -> new AccountNotFoundException("ss"));
+    }
+    public List<RoleDTO> getRolesByAccount(Long accountId) throws AccountNotFoundException {
+        Account account = getAccountById((accountId));
+        return account.getRoles()
+                .stream().map((r) -> new RoleDTO(r.getName())).collect(Collectors.toList());
     }
 }

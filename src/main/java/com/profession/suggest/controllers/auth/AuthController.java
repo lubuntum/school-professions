@@ -5,6 +5,7 @@ import com.profession.suggest.database.services.pupil.PupilService;
 import com.profession.suggest.dto.auth.AccountApiRegisterDTO;
 import com.profession.suggest.dto.auth.AccountDTO;
 import com.profession.suggest.dto.auth.AccountRegisterRequestDTO;
+import com.profession.suggest.dto.auth.RoleDTO;
 import com.profession.suggest.dto.pupil.PupilDTO;
 import com.profession.suggest.services.jwt.JWTService;
 import jakarta.validation.Valid;
@@ -56,6 +57,15 @@ public class AuthController {
             return ResponseEntity.ok(accountService.login(account));
         } catch (AccountNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("please check login or password");
+        }
+
+    }
+    @GetMapping("/account-roles")
+    public ResponseEntity<List<RoleDTO>> getAccountRoles(@RequestAttribute("accountId") Long accountId) throws AccountNotFoundException {
+        try {
+            return ResponseEntity.ok(accountService.getRolesByAccount(accountId));
+        } catch (AccountNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
     }
