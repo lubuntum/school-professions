@@ -12,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString(exclude = "accounts")
-@EqualsAndHashCode(exclude = "accounts")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Role {
@@ -21,6 +21,7 @@ public class Role {
     private Long id;
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, unique = true)
+    @EqualsAndHashCode.Include
     RoleEnum name;
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<Account> accounts = new HashSet<>();
