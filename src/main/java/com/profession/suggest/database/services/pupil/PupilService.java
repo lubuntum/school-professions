@@ -74,10 +74,10 @@ public class PupilService {
         Gender gender = genderService.findGenderByName(pupilDTO.getGender());
         if (pupil == null) {
             pupil = new Pupil();
-            pupil.setGender(gender);
             pupil.setAccount(account);
         }
         pupil = pupilMapper.updateFromDTO(pupil, pupilDTO);
+        pupil.setGender(gender);
         return pupilMapper.toDTO(repository.save(pupil));
     }
     public Page<PupilResponseDTO> getPupilsData(Pageable pageable) {
