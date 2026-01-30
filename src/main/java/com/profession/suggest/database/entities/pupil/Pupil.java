@@ -76,6 +76,12 @@ public class Pupil {
     //OneToMany List PsychTests
     @OneToMany(mappedBy = "pupil", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PsychTest> psychTests;
+    @ManyToMany
+    @JoinTable(
+            name = "pupil_grade",
+            joinColumns = @JoinColumn(name = "pupil_id"),
+            inverseJoinColumns = @JoinColumn(name = "grade_id")
+    )
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDate.now();
