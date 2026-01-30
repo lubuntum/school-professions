@@ -19,7 +19,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/pupils/pupil-data",
                         "/api/pupils/update-pupil-data",
                         "/api/psych-tests/**",
-                        "/api/auth/account-roles"
+                        "/api/auth/account-roles",
+                        "/api/pupil-subjects/**"
                 );
     }
 }
