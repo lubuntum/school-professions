@@ -9,14 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SubjectService {
     private final SubjectRepository repository;
-    private final PupilSubjectProfileService pupilSubjectProfileService;
-    public SubjectService(SubjectRepository repository, PupilSubjectProfileService pupilSubjectProfileService) {
+    public SubjectService(SubjectRepository repository) {
         this.repository = repository;
-        this.pupilSubjectProfileService = pupilSubjectProfileService;
     }
     public Subject getSubjectByName(String name) {
         return repository.findByName(name);
@@ -24,11 +23,8 @@ public class SubjectService {
     public List<Subject> getAllSubjects() {
         return repository.findAll();
     }
-    @Transactional
-    public void addSubjectProfilesForPupil(List<PupilSubjectDTO> pupilSubjectDTOS, Pupil pupil) {
-        pupilSubjectDTOS.forEach((pupilSubjectDTO -> {
-            Subject subject = repository.findByName(pupilSubjectDTO.getName());
-            pupilSubjectProfileService.createPupilSubjectProfile(pupil, subject, pupilSubjectDTO.getPupilSubjectProfileDTO());
-        }));
+
+    public List<Subject> getSubjectsByNames(List<String> names) {
+        return repository.findAllByNameIn(names);
     }
 }
