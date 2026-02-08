@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PupilSubjectProfileDTO {
-    InterestLevel interestLevel;
-    ParticipationLevel contestParticipationLevel;
-    ParticipationLevel projectParticipationLevel;
-    ProbabilityLevel selectionProbabilityLevel;
+    String interestLevel;
+    String contestParticipationLevel;
+    String projectParticipationLevel;
+    String selectionProbabilityLevel;
 }

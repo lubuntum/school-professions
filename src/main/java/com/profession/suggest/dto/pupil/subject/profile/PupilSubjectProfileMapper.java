@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PupilSubjectProfileMapper {
+    /*
     public PupilSubjectProfile fromDTO (PupilSubjectProfileDTO dto) {
         PupilSubjectProfile profile = new PupilSubjectProfile();
         profile.setInterestLevel(dto.getInterestLevel());
@@ -13,12 +14,14 @@ public class PupilSubjectProfileMapper {
         profile.setProbabilityLevel(dto.getSelectionProbabilityLevel());
         return profile;
     }
+
+     */
     public PupilSubjectProfileDTO toDTO (PupilSubjectProfile profile) {
         PupilSubjectProfileDTO dto = new PupilSubjectProfileDTO();
-        dto.setInterestLevel(profile.getInterestLevel());
-        dto.setContestParticipationLevel(profile.getContest());
-        dto.setProjectParticipationLevel(profile.getPracticalProject());
-        dto.setSelectionProbabilityLevel(profile.getProbabilityLevel());
+        dto.setInterestLevel(profile.getInterestLevel().getLevel());
+        dto.setContestParticipationLevel(profile.getContest().getLevel());
+        dto.setProjectParticipationLevel(profile.getPracticalProject().getLevel());
+        dto.setSelectionProbabilityLevel(profile.getProbabilityLevel().getLevel());
         return dto;
     }
 }
