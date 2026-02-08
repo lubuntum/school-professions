@@ -4,4 +4,5 @@ import com.profession.suggest.database.entities.pupil.subject.profile.Probabilit
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProbabilityLevelRepository extends JpaRepository<ProbabilityLevel, Long> {
+    ProbabilityLevel findByLevel(String level);
 }

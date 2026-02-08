@@ -9,5 +9,4 @@ import java.util.Optional;
 
 public interface PupilSubjectProfileRepository extends JpaRepository<PupilSubjectProfile, Long> {
     Optional<PupilSubjectProfile> findByPupilAndSubject(Pupil pupil, Subject subject);
-    PupilSubjectProfile findByPupil(Pupil pupil);
 }

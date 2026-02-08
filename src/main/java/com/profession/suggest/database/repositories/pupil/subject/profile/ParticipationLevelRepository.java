@@ -4,4 +4,5 @@ import com.profession.suggest.database.entities.pupil.subject.profile.Participat
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ParticipationLevelRepository extends JpaRepository<ParticipationLevel, Long> {
+    ParticipationLevel findByLevel(String level);
 }
