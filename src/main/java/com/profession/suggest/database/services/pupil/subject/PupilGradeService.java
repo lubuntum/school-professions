@@ -55,8 +55,7 @@ public class PupilGradeService {
             }
         }
     }
-    public List<PupilSubjectDTO> getPupilSubject(Long accountId) {
-        Pupil pupil = pupilService.getPupilByAccountId(accountId);
+    public List<PupilSubjectDTO> getPupilSubject(Pupil pupil) {
 
         List<PupilGrade> pupilGrades = repository.findByPupil(pupil);
         //get all subjects for split grades between them for parsing to DTOs
