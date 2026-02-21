@@ -16,10 +16,12 @@ public class JWTValidationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        /*
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
             return false; // Do not proceed with further processing
         }
+        */
         try {
             String jwtToken = request.getHeader("Authorization");
             if (jwtToken != null){
