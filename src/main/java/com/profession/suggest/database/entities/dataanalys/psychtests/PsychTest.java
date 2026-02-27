@@ -23,7 +23,7 @@ public class PsychTest {
     @Column(name = "completion_time_seconds")
     private Double completionTimeSeconds;
     @Column(name = "created_at", updatable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     //ManyToOne Pupil +
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pupil_id")
@@ -42,7 +42,7 @@ public class PsychTest {
     private Set<PsychParam> psychParams = new HashSet<>();
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDate.now();
+        createdAt = LocalDateTime.now();
     }
 
 }
