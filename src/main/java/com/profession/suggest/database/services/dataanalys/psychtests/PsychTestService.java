@@ -9,11 +9,13 @@ import com.profession.suggest.database.services.pupil.PupilService;
 import com.profession.suggest.dto.dataanalys.psychtests.PsychTestDTO;
 import com.profession.suggest.dto.dataanalys.psychtests.PsychTestMapper;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,7 +52,15 @@ public class PsychTestService {
     }
     public List<PsychTestDTO> getPupilTests(Pupil pupil) {
         List<PsychTest> psychTests = repository.findByPupil(pupil);
-        return psychTests.stream().map(mapper::toDTO).collect(Collectors.toList());
+        return psychTests.stream().map( test -> {
+            try {
+                return mapper.toDTO(test);
+            } catch (NullPointerException e) {
+                return null;
+            }
+        })
+        .filter(Objects::nonNull)
+        .collect(Collectors.toList());
     }
     public List<PsychTestDTO> getPupilTestByType(Pupil pupil, String testTypeName) {
         PsychTestType testType = psychTestTypeService.getPsychTestTypeByName(testTypeName);
