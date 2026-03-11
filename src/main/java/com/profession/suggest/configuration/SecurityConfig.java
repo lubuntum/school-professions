@@ -26,6 +26,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/public/**").permitAll()
                         .anyRequest().authenticated());
         return http.build();
     }
