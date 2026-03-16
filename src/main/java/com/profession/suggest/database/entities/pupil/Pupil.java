@@ -39,12 +39,10 @@ public class Pupil {
     @Column(name = "patronymic", length = 50, nullable = false)
     private String patronymic;
 
-    @NotNull(message = "Birthday is required")
     @Past(message = "Birthday must be in the past")
     @Column(name = "birthday")
     private LocalDate birthday;
 
-    @NotBlank(message = "School is required")
     @Size(max = 200, message = "School name must not exceed 200 characters")
     @Column(name = "school", length = 200)
     private String school;

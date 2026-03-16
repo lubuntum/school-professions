@@ -19,14 +19,13 @@ public class PupilDTO {
     @NotBlank(message = "Name is required")
     @Size(min = 2, max = 50, message = "Name must be 2-50 characters")
     private String name;
-
+    @NotBlank(message = "Surname is required")
     @Size(max = 50, message = "Surname cannot exceed 50 characters")
     private String surname;
 
     @Size(max = 50, message = "Patronymic cannot exceed 50 characters")
     private String patronymic;
 
-    @NotNull(message = "Birthday is required")
     @Past(message = "Birthday must be in the past")
     private LocalDate birthday;
 

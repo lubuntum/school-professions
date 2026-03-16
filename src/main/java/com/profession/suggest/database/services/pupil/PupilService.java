@@ -62,10 +62,12 @@ public class PupilService {
     }
 
     public void createAllWithAccount(List<AccountApiRegisterDTO> accounts) {
-        try {
-            accounts.forEach(this::createWithAccount);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        for (AccountApiRegisterDTO account: accounts) {
+            try {
+                createWithAccount(account);
+            } catch (Exception e) {
+                System.err.println("Error processing account: " + e.getMessage());
+            }
         }
     }
     public PupilDTO updatePupilData(PupilDTO pupilDTO, Long accountId) throws AccountNotFoundException {
