@@ -29,6 +29,8 @@ public class Account {
     private String password;
     @Column(name = "created_at")
     private LocalDate createdAt;
+    @Column(name = "first_login")
+    private Boolean firstLogin;
 
     @OneToOne(mappedBy = "account", fetch = FetchType.LAZY, optional = true)
     private Pupil pupil;
@@ -42,5 +44,7 @@ public class Account {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDate.now();
+        if (firstLogin == null)
+            firstLogin = true;
     }
 }

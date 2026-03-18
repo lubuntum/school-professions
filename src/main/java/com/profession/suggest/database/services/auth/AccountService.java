@@ -38,14 +38,16 @@ public class AccountService {
     public Boolean isEmailFree(String email) {
         return repository.findByEmail(email) == null;
     }
+    @Transactional
     public String login (AccountDTO accountDTO) throws AccountNotFoundException {
         Account account = repository.findByEmail(accountDTO.getEmail());
         if (account == null)
             throw new AccountNotFoundException("Email or password incorrect");
         if (!passwordEncoder.matches(accountDTO.getPassword(), account.getPassword()))
             throw new AccountNotFoundException("Email or password incorrect");
-
-        return jwtService.generateToken(String.valueOf(account.getId()));
+        String token = jwtService.generateTokenWithAccountInfo(account);
+        if (account.getFirstLogin()) account.setFirstLogin(false);
+        return token;
     }
     @Transactional
     public String registration(AccountRegisterRequestDTO accountRegisterRequestDTO) throws BadRequestException {

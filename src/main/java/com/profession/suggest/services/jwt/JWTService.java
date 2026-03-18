@@ -1,6 +1,7 @@
 package com.profession.suggest.services.jwt;
 
 import com.profession.suggest.configuration.properties.EnvPropertiesConfig;
+import com.profession.suggest.database.entities.auth.Account;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.Claims;
@@ -22,9 +23,15 @@ public class JWTService {
         this.env = env;
     }
 
-    public String generateToken(String data){
+    public String generateToken(String id){
         Map<String, Object> claims = new HashMap<>();
-        return "Bearer " + createToken(claims, data);
+        return "Bearer " + createToken(claims, id);
+    }
+    public String generateTokenWithAccountInfo(Account account) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("email", account.getEmail());
+        claims.put("firstLogin", account.getFirstLogin());
+        return "Bearer " + createToken(claims, String.valueOf(account.getId()));
     }
     private String createToken(Map<String, Object> claims, String subject){
         return Jwts.builder()
