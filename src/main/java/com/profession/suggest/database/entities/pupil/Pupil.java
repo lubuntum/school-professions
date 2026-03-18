@@ -39,7 +39,6 @@ public class Pupil {
     @Column(name = "patronymic", length = 50, nullable = false)
     private String patronymic;
 
-    @Past(message = "Birthday must be in the past")
     @Column(name = "birthday")
     private LocalDate birthday;
 
