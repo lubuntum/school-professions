@@ -14,8 +14,10 @@ import com.profession.suggest.dto.auth.AccountMapper;
 import com.profession.suggest.dto.pupil.PupilDTO;
 import com.profession.suggest.dto.pupil.PupilMapper;
 import com.profession.suggest.dto.pupil.PupilResponseDTO;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -87,5 +89,8 @@ public class PupilService {
     }
     public PupilResponseDTO getPupilData(Long id) {
         return repository.findPupilData(id);
+    }
+    public Pupil getPupilByAccountEmail(String email) {
+        return repository.findByAccountEmail(email).orElseThrow(() -> new NullPointerException("No pupil for email: " + email));
     }
 }
