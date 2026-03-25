@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -63,7 +64,9 @@ public class AuthController {
     @GetMapping("/account-roles")
     public ResponseEntity<List<RoleDTO>> getAccountRoles(@RequestAttribute("accountId") Long accountId) throws AccountNotFoundException {
         try {
-            return ResponseEntity.ok(accountService.getRolesByAccount(accountId));
+            return ResponseEntity.ok(accountService.getRolesByAccount(accountId).stream()
+                    .map((r) -> new RoleDTO(r.getName()))
+                    .collect(Collectors.toList()));
         } catch (AccountNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

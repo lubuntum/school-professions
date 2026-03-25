@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.security.auth.login.AccountNotFoundException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -72,9 +73,8 @@ public class AccountService {
     public Account getAccountById(Long id) throws AccountNotFoundException {
         return repository.findById(id).orElseThrow(() -> new AccountNotFoundException("ss"));
     }
-    public List<RoleDTO> getRolesByAccount(Long accountId) throws AccountNotFoundException {
+    public Set<Role> getRolesByAccount(Long accountId) throws AccountNotFoundException {
         Account account = getAccountById((accountId));
-        return account.getRoles()
-                .stream().map((r) -> new RoleDTO(r.getName())).collect(Collectors.toList());
+        return account.getRoles();
     }
 }
