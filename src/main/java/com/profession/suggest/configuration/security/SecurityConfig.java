@@ -1,4 +1,4 @@
-package com.profession.suggest.configuration;
+package com.profession.suggest.configuration.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
