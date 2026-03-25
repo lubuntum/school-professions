@@ -1,8 +1,10 @@
 package com.profession.suggest.database.entities.pupil;
 
+import com.profession.suggest.database.entities.dataanalys.simulation.Simulation;
 import com.profession.suggest.database.entities.gender.Gender;
 import com.profession.suggest.database.entities.auth.Account;
 import com.profession.suggest.database.entities.dataanalys.psychtests.PsychTest;
+import com.profession.suggest.database.entities.pupil.subject.PupilGrade;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -73,12 +75,10 @@ public class Pupil {
     //OneToMany List PsychTests
     @OneToMany(mappedBy = "pupil", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PsychTest> psychTests;
-    @ManyToMany
-    @JoinTable(
-            name = "pupil_grade",
-            joinColumns = @JoinColumn(name = "pupil_id"),
-            inverseJoinColumns = @JoinColumn(name = "grade_id")
-    )
+    @OneToMany(mappedBy = "pupil")
+    private List<Simulation> simulations;
+    @OneToMany(mappedBy = "pupil", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PupilGrade> pupilGrades;
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDate.now();
