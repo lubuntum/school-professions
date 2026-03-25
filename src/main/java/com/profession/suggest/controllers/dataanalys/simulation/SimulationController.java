@@ -46,12 +46,12 @@ public class SimulationController {
                                                                       @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "10") int size,
                                                                       @RequestParam(defaultValue = "createdAt") String sortBy){
-        Pageable pageable = (Pageable) PageRequest.of(page, size, Sort.by(Sort.Direction.fromString("desc"), sortBy));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString("desc"), sortBy));
         Page<Simulation> simulations = simulationService.findByFilters(email,
                 startSimulation, endSimulation,
                 simulationType, profession,
                 pageable);
         return ResponseEntity.ok(
-                simulations.map(s -> simulationMapper.toResponseDTO(s, email)));
+                simulations.map(s -> simulationMapper.toResponseDTO(s, s.getPupil().getAccount().getEmail())));
     }
 }
