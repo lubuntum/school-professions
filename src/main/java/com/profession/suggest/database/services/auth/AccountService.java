@@ -41,7 +41,7 @@ public class AccountService {
     }
     @Transactional
     public String login (AccountDTO accountDTO) throws AccountNotFoundException {
-        Account account = repository.findByEmail(accountDTO.getEmail());
+        Account account = repository.findByEmail(accountDTO.getEmail().toLowerCase());
         if (account == null)
             throw new AccountNotFoundException("Email or password incorrect");
         if (!passwordEncoder.matches(accountDTO.getPassword(), account.getPassword()))
@@ -58,7 +58,7 @@ public class AccountService {
         if (!isEmailFree(accountRegisterRequestDTO.getEmail()))
             throw new IllegalArgumentException("Email already in use");
         Account account = new Account();
-        account.setEmail(accountRegisterRequestDTO.getEmail());
+        account.setEmail(accountRegisterRequestDTO.getEmail().toLowerCase());
         account.setPassword(passwordEncoder.encode(accountRegisterRequestDTO.getPassword()));
 
         Role role = roleService.findByName(RoleEnum.PUPIL);
@@ -67,6 +67,7 @@ public class AccountService {
         account.getRoles().add(role);
         return repository.save(account).getEmail();
     }
+
     public PupilResponseDTO getPupilDataByAccountId(Long id) {
         return repository.findPupilDataByAccountId(id);
     }
