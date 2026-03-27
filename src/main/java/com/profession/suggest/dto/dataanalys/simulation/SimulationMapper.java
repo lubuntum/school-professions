@@ -27,8 +27,12 @@ public class SimulationMapper {
         dto.setEmail(email);
         dto.setStartSimulation(simulation.getStartSimulation());
         dto.setEndSimulation(simulation.getEndSimulation());
-        dto.setProfession(simulation.getProfession().getName());
-        dto.setSimulationType(simulation.getSimulationType().getName());
+
+        dto.setProfession(simulation.getProfession() != null ?
+                simulation.getProfession().getName() : null);
+        dto.setSimulationType(simulation.getSimulationType().getName() != null ?
+                simulation.getSimulationType().getName() : null);
+
         dto.setFilePath(simulation.getFilePath());
         dto.setCreatedAt(simulation.getCreatedAt());
         return dto;

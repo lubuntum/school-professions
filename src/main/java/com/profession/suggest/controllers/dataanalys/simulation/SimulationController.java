@@ -16,6 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import org.springframework.data.domain.Pageable;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,13 +48,14 @@ public class SimulationController {
                                                                       @RequestParam(required = false) String profession,
                                                                       @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "10") int size,
-                                                                      @RequestParam(defaultValue = "createdAt") String sortBy){
+                                                                      @RequestParam(defaultValue = "createdAt") String sortBy) throws UnsupportedEncodingException {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString("desc"), sortBy));
         Page<Simulation> simulations = simulationService.findByFilters(email,
                 startSimulation, endSimulation,
-                simulationType, profession,
+                simulationType, profession != null ? URLDecoder.decode(profession, StandardCharsets.UTF_8) : null,
                 pageable);
         return ResponseEntity.ok(
-                simulations.map(s -> simulationMapper.toResponseDTO(s, s.getPupil().getAccount().getEmail())));
+                simulations.map(s -> simulationMapper.toResponseDTO(
+                        s, s.getPupil().getAccount() != null ? s.getPupil().getAccount().getEmail() : null)));
     }
 }

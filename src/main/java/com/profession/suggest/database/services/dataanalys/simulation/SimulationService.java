@@ -30,7 +30,10 @@ public class SimulationService {
     private final ProfessionService professionService;
     private final PupilService pupilService;
     private final FileStorageService fileStorageService;
-
+    /* TODO
+    * simulation can be created even if account with email doesn't exists
+    * (register account with default password and default pupil and continue)
+    * */
     @Transactional
     public Simulation createSimulation(SimulationDTO simulationDTO, MultipartFile file) {
         try {
@@ -38,8 +41,11 @@ public class SimulationService {
             Simulation simulation = new Simulation();
             SimulationType simulationType = simulationTypeService.getByName(simulationDTO.getSimulationType());
             Profession profession = professionService.getProfessionByName(simulationDTO.getProfession());
-            Pupil pupil = pupilService.getPupilByAccountEmail(simulationDTO.getEmail());
-
+            Pupil pupil = pupilService
+                    .getPupilByAccountEmail(simulationDTO.getEmail())
+                    .orElse(pupilService.createWithDefaults(simulationDTO.getEmail()));
+            //if there is no pupil found by account email,
+            // that means need to create Account with email and Pupil
             simulation.setSimulationType(simulationType);
             simulation.setProfession(profession);
             simulation.setStartSimulation(simulationDTO.getStartSimulation());
