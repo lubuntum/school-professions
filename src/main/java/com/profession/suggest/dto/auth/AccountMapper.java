@@ -7,16 +7,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AccountMapper {
-    private final PasswordEncoder passwordEncoder;
-
-    public AccountMapper(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public Account fromDTO(AccountRegisterRequestDTO dto) {
         Account account = new Account();
         account.setEmail(dto.getEmail());
-        account.setPassword(passwordEncoder.encode(dto.getPassword()));
+        account.setPassword(dto.getPassword());
         return account;
     }
 }

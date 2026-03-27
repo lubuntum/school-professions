@@ -74,6 +74,9 @@ public class AccountService {
     public Account getAccountById(Long id) throws AccountNotFoundException {
         return repository.findById(id).orElseThrow(() -> new AccountNotFoundException("ss"));
     }
+    public Account getAccountByEmail(String email) throws AccountNotFoundException {
+        return repository.findByEmail(email);
+    }
     public Set<Role> getRolesByAccount(Long accountId) throws AccountNotFoundException {
         Account account = getAccountById((accountId));
         return account.getRoles();
