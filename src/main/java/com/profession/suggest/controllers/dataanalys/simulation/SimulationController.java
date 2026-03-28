@@ -52,7 +52,7 @@ public class SimulationController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString("desc"), sortBy));
         Page<Simulation> simulations = simulationService.findByFilters(email,
                 startSimulation, endSimulation,
-                simulationType, profession != null ? URLDecoder.decode(profession, StandardCharsets.UTF_8) : null,
+                simulationType, profession ,
                 pageable);
         return ResponseEntity.ok(
                 simulations.map(s -> simulationMapper.toResponseDTO(
