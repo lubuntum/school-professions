@@ -39,7 +39,6 @@ public class SimulationController {
                 .toDTO(simulationService
                         .createSimulation(simulationDTO, file), simulationDTO.getEmail()));
     }
-    @HasRole(RoleEnum.ADMIN)
     @GetMapping
     public ResponseEntity<Page<SimulationResponseDTO>> getSimulations(@RequestParam(required = false) String email,
                                                                       @RequestParam(required = false) LocalDateTime startSimulation,
