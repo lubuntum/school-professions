@@ -2,6 +2,8 @@ package com.profession.suggest.database.entities.auth;
 
 import com.profession.suggest.database.entities.auth.role.Role;
 import com.profession.suggest.database.entities.pupil.Pupil;
+import com.profession.suggest.database.entities.specialist.Specialist;
+import com.profession.suggest.database.services.specialist.SpecialistService;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,8 +34,10 @@ public class Account {
     @Column(name = "first_login")
     private Boolean firstLogin;
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY, optional = true)
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
     private Pupil pupil;
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    private Specialist specialist;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "account_roles",
