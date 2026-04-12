@@ -35,6 +35,7 @@ public class PupilMapper {
         dto.setClassNumber(pupil.getClassNumber());
         dto.setClassLabel(pupil.getClassLabel());
         dto.setGender(pupil.getGender().getName());
+        dto.setCreatedAt(pupil.getCreatedAt());
         return dto;
     }
     public Pupil updateFromDTO(Pupil pupil, PupilDTO dto) {

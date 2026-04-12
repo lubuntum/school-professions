@@ -45,4 +45,5 @@ public class PupilDTO {
     private String classLabel;
     @NotNull(message = "Gender is required")
     private GenderEnum gender;
+    private LocalDate createdAt;
 }
