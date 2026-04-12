@@ -1,6 +1,7 @@
 package com.profession.suggest.database.entities.specialist;
 
 import com.profession.suggest.database.entities.auth.Account;
+import com.profession.suggest.database.entities.gender.Gender;
 import com.profession.suggest.database.entities.professions.Profession;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,4 +39,7 @@ public class Specialist {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profession_id")
     private Profession profession;
+    @ManyToOne()
+    @JoinColumn(name = "gender_id")
+    private Gender gender;
 }
