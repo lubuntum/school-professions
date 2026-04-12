@@ -51,7 +51,7 @@ public class AccountService {
         return token;
     }
     @Transactional
-    public String registration(AccountRegisterRequestDTO accountRegisterRequestDTO) throws BadRequestException {
+    public Account registration(AccountRegisterRequestDTO accountRegisterRequestDTO, RoleEnum defaultRole) throws BadRequestException {
         if (accountRegisterRequestDTO == null || accountRegisterRequestDTO.getEmail() == null
                 || accountRegisterRequestDTO.getPassword() == null)
             throw new BadRequestException("Fill all fields");
@@ -61,11 +61,11 @@ public class AccountService {
         account.setEmail(accountRegisterRequestDTO.getEmail().toLowerCase());
         account.setPassword(passwordEncoder.encode(accountRegisterRequestDTO.getPassword()));
 
-        Role role = roleService.findByName(RoleEnum.PUPIL);
+        Role role = roleService.findByName(defaultRole);
         if (account.getRoles() == null)
             account.setRoles(new HashSet<>());
         account.getRoles().add(role);
-        return repository.save(account).getEmail();
+        return repository.save(account);
     }
 
     public PupilResponseDTO getPupilDataByAccountId(Long id) {

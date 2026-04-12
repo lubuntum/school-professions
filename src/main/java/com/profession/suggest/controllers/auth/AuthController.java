@@ -1,5 +1,6 @@
 package com.profession.suggest.controllers.auth;
 
+import com.profession.suggest.database.entities.auth.role.RoleEnum;
 import com.profession.suggest.database.services.auth.AccountService;
 import com.profession.suggest.database.services.pupil.PupilService;
 import com.profession.suggest.dto.auth.AccountApiRegisterDTO;
@@ -44,7 +45,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody AccountRegisterRequestDTO account) throws BadRequestException {
         try {
-            return ResponseEntity.ok(accountService.registration(account));
+            return ResponseEntity.ok(accountService.registration(account, RoleEnum.PUPIL).getEmail());
         } catch (BadRequestException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("please check all fields");
         } catch (IllegalArgumentException e) {

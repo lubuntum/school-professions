@@ -10,7 +10,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query("SELECT new com.profession.suggest.dto.pupil.PupilResponseDTO(" +
             "p.id, p.name, p.surname, p.patronymic, p.birthday, p.school, " +
-            "p.healthCondition, p.nationality, p.extraActivities, p.classNumber, p.classLabel, g.name, a.email) " +
+            "p.healthCondition, p.nationality, p.extraActivities, p.classNumber, p.classLabel, g.name, a.email, p.createdAt) " +
             "FROM Account a " +
             "LEFT JOIN a.pupil p " +
             "LEFT JOIN p.gender g " +
