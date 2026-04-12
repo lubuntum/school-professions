@@ -1,12 +1,13 @@
 package com.profession.suggest.controllers.dataanalys.simulation;
 
-import com.profession.suggest.configuration.security.annotation.HasRole;
-import com.profession.suggest.database.entities.auth.role.RoleEnum;
 import com.profession.suggest.database.entities.dataanalys.simulation.Simulation;
+import com.profession.suggest.database.entities.dataanalys.simulation.SimulationType;
 import com.profession.suggest.database.services.dataanalys.simulation.SimulationService;
+import com.profession.suggest.database.services.dataanalys.simulation.SimulationTypeService;
 import com.profession.suggest.dto.dataanalys.simulation.SimulationDTO;
 import com.profession.suggest.dto.dataanalys.simulation.SimulationMapper;
 import com.profession.suggest.dto.dataanalys.simulation.SimulationResponseDTO;
+import com.profession.suggest.dto.dataanalys.simulation.SimulationTypeDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -17,20 +18,19 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Pageable;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/simulations")
 public class SimulationController {
     private final SimulationService simulationService;
+    private final SimulationTypeService simulationTypeService;
     private final SimulationMapper simulationMapper;
 
-    public SimulationController(SimulationService simulationService, SimulationMapper simulationMapper) {
+    public SimulationController(SimulationService simulationService, SimulationTypeService simulationTypeService, SimulationMapper simulationMapper) {
         this.simulationService = simulationService;
+        this.simulationTypeService = simulationTypeService;
         this.simulationMapper = simulationMapper;
     }
     @PostMapping("/create")
@@ -56,5 +56,13 @@ public class SimulationController {
         return ResponseEntity.ok(
                 simulations.map(s -> simulationMapper.toResponseDTO(
                         s, s.getPupil().getAccount() != null ? s.getPupil().getAccount().getEmail() : null)));
+    }
+    @GetMapping("/types")
+    public ResponseEntity<List<SimulationTypeDTO>> getSimulationTypes() {
+        return ResponseEntity.ok(simulationTypeService.getSimulationTypes());
+    }
+    @PostMapping("/types")
+    public ResponseEntity<SimulationTypeDTO> createSimulationType(@RequestBody SimulationTypeDTO simulationTypeDTO) {
+        return ResponseEntity.ok(simulationTypeService.createSimulation(simulationTypeDTO));
     }
 }
