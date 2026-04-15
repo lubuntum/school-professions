@@ -33,7 +33,7 @@ public class AuthController {
     }
     //Legacy, this is PupilController method
     @PostMapping("/auto-register")
-    public ResponseEntity<PupilDTO> autoRegister(@Valid @RequestBody AccountApiRegisterDTO accountApiRegisterDTO) {
+    public ResponseEntity<PupilDTO> autoRegister(@Valid @RequestBody AccountApiRegisterDTO accountApiRegisterDTO) throws BadRequestException {
         return ResponseEntity.ok(pupilService.createWithAccount(accountApiRegisterDTO));
     }
     //Legacy, this is PupilController method and PupilApiRegisterDTO best name as in SpecialistController

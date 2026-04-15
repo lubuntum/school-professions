@@ -19,6 +19,7 @@ import com.profession.suggest.dto.pupil.PupilResponseDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -62,14 +63,14 @@ public class PupilService {
         return repository.save(pupil);
     }
     @Transactional
-    public PupilDTO createWithAccount(AccountApiRegisterDTO accountApiRegisterDTO) {
+    public PupilDTO createWithAccount(AccountApiRegisterDTO accountApiRegisterDTO) throws BadRequestException {
         Pupil pupil = pupilMapper.fromDTO(accountApiRegisterDTO.getPupilDTO());
         Account account = accountMapper.fromDTO(accountApiRegisterDTO.getAccountRegisterRequestDTO());
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         Role role = roleService.findByName(RoleEnum.PUPIL);
         if (account.getRoles() == null) account.setRoles(new HashSet<>());
         account.getRoles().add(role);
-        Account savedAccount = accountService.createAccount(account);
+        Account savedAccount = accountService.registration(accountApiRegisterDTO.getAccountRegisterRequestDTO(), RoleEnum.PUPIL);
         Gender gender = genderService.findGenderByName(accountApiRegisterDTO.getPupilDTO().getGender());
         pupil.setGender(gender);
         pupil.setAccount(savedAccount);
@@ -92,7 +93,7 @@ public class PupilService {
     //2 Has account and pupil
     //3 Doesnt have account and pupil
     @Transactional
-    public Pupil createWithDefaults(String email) throws AccountNotFoundException {
+    public Pupil createWithDefaults(String email) throws AccountNotFoundException, BadRequestException {
 
         Pupil existingPupil = repository.findByAccountEmail(email).orElse(null);
         //Has account and pupil
@@ -111,7 +112,7 @@ public class PupilService {
         pupil.setAccount(account);
         return repository.save(pupil);
     }
-    public Pupil createDefaultPupilWithNewAccount(String email) {
+    public Pupil createDefaultPupilWithNewAccount(String email) throws BadRequestException {
         AccountApiRegisterDTO registerDTO = new AccountApiRegisterDTO();
 
         // Setup pupil DTO
