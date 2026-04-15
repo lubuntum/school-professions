@@ -55,7 +55,7 @@ public class AccountService {
         if (accountRegisterRequestDTO == null || accountRegisterRequestDTO.getEmail() == null
                 || accountRegisterRequestDTO.getPassword() == null)
             throw new BadRequestException("Fill all fields");
-        if (!isEmailFree(accountRegisterRequestDTO.getEmail()))
+        if (!isEmailFree(accountRegisterRequestDTO.getEmail().toLowerCase()))
             throw new IllegalArgumentException("Email already in use");
         Account account = new Account();
         account.setEmail(accountRegisterRequestDTO.getEmail().toLowerCase());
