@@ -31,14 +31,15 @@ public class AuthController {
         this.accountService = accountService;
         this.jwtService = jwtService;
     }
-
+    //Legacy, this is PupilController method
     @PostMapping("/auto-register")
     public ResponseEntity<PupilDTO> autoRegister(@Valid @RequestBody AccountApiRegisterDTO accountApiRegisterDTO) {
         return ResponseEntity.ok(pupilService.createWithAccount(accountApiRegisterDTO));
     }
+    //Legacy, this is PupilController method and PupilApiRegisterDTO best name as in SpecialistController
     @PostMapping("/auto-register-all")
     public ResponseEntity<String> autoRegisterAll(@RequestBody List<AccountApiRegisterDTO> accountApiRegisterDTOList) {
-        pupilService.createAllWithAccount(accountApiRegisterDTOList);
+        pupilService.createAllWithAccounts(accountApiRegisterDTOList);
         return ResponseEntity.ok("OK");
     }
 

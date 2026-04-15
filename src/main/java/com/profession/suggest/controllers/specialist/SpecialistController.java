@@ -39,8 +39,14 @@ public class SpecialistController {
     }
     @HasRole(RoleEnum.ADMIN)
     @PostMapping("/register-all")
-    public ResponseEntity<?> autoRegister(@RequestBody List<SpecialistRegisterRequest> specialistRegisterRequest) {
-        return null;
+    public ResponseEntity<String> autoRegister(@RequestBody List<SpecialistRegisterRequest> specialistRegisterRequest) {
+        try {
+            specialistService.createAllWithAccounts(specialistRegisterRequest);
+            return ResponseEntity.ok("Specialists saved");
+        } catch (Exception e) {
+            log.error("Error occurred while saving specialists", e);
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
     //TODO test it
     @PostMapping("/register")

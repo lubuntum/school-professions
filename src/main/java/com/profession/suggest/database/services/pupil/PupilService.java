@@ -78,7 +78,7 @@ public class PupilService {
         return pupilMapper.toDTO(savedPupil);
     }
 
-    public void createAllWithAccount(List<AccountApiRegisterDTO> accounts) {
+    public void createAllWithAccounts(List<AccountApiRegisterDTO> accounts) {
         for (AccountApiRegisterDTO account: accounts) {
             try {
                 createWithAccount(account);
