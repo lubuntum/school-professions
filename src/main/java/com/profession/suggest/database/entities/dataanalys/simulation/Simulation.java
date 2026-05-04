@@ -37,6 +37,12 @@ public class Simulation {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profession_id")
     private Profession profession;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "scenario_id")
+    private Scenario scenario;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "simulation_data_source_id")
+    private SimulationDataSource simulationDataSource;
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
