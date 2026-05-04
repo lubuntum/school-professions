@@ -1,13 +1,11 @@
 package com.profession.suggest.controllers.dataanalys.simulation;
 
 import com.profession.suggest.database.entities.dataanalys.simulation.Simulation;
-import com.profession.suggest.database.entities.dataanalys.simulation.SimulationType;
+import com.profession.suggest.database.services.dataanalys.simulation.ScenarioService;
+import com.profession.suggest.database.services.dataanalys.simulation.SimulationDataSourceService;
 import com.profession.suggest.database.services.dataanalys.simulation.SimulationService;
 import com.profession.suggest.database.services.dataanalys.simulation.SimulationTypeService;
-import com.profession.suggest.dto.dataanalys.simulation.SimulationDTO;
-import com.profession.suggest.dto.dataanalys.simulation.SimulationMapper;
-import com.profession.suggest.dto.dataanalys.simulation.SimulationResponseDTO;
-import com.profession.suggest.dto.dataanalys.simulation.SimulationTypeDTO;
+import com.profession.suggest.dto.dataanalys.simulation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -26,11 +24,15 @@ import java.util.List;
 public class SimulationController {
     private final SimulationService simulationService;
     private final SimulationTypeService simulationTypeService;
+    private final ScenarioService scenarioService;
+    private final SimulationDataSourceService simulationDataSourceService;
     private final SimulationMapper simulationMapper;
 
-    public SimulationController(SimulationService simulationService, SimulationTypeService simulationTypeService, SimulationMapper simulationMapper) {
+    public SimulationController(SimulationService simulationService, SimulationTypeService simulationTypeService, ScenarioService scenarioService, SimulationDataSourceService simulationDataSourceService, SimulationMapper simulationMapper) {
         this.simulationService = simulationService;
         this.simulationTypeService = simulationTypeService;
+        this.scenarioService = scenarioService;
+        this.simulationDataSourceService = simulationDataSourceService;
         this.simulationMapper = simulationMapper;
     }
     @PostMapping("/create")
@@ -45,14 +47,16 @@ public class SimulationController {
                                                                       @RequestParam(required = false) LocalDateTime endSimulation,
                                                                       @RequestParam(required = false) String simulationType,
                                                                       @RequestParam(required = false) String profession,
+                                                                      @RequestParam(required = false) String scenario,
+                                                                      @RequestParam(required = false) String simulationDataSource,
                                                                       @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "10") int size,
                                                                       @RequestParam(defaultValue = "createdAt") String sortBy) throws UnsupportedEncodingException {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString("desc"), sortBy));
         Page<Simulation> simulations = simulationService.findByFilters(email,
                 startSimulation, endSimulation,
-                simulationType, profession ,
-                pageable);
+                simulationType, profession , scenario,
+                simulationDataSource, pageable);
         return ResponseEntity.ok(
                 simulations.map(s -> simulationMapper.toResponseDTO(
                         s, s.getPupil().getAccount() != null ? s.getPupil().getAccount().getEmail() : null)));
@@ -64,5 +68,13 @@ public class SimulationController {
     @PostMapping("/types")
     public ResponseEntity<SimulationTypeDTO> createSimulationType(@RequestBody SimulationTypeDTO simulationTypeDTO) {
         return ResponseEntity.ok(simulationTypeService.createSimulation(simulationTypeDTO));
+    }
+    @GetMapping("/scenarios")
+    public ResponseEntity<List<ScenarioDTO>> getScenario() {
+        return ResponseEntity.ok(scenarioService.getAllScenarios());
+    }
+    @GetMapping("/simulation-data-sources")
+    public ResponseEntity<List<SimulationDataSourceDTO>> getSimulationDataSources() {
+        return ResponseEntity.ok(simulationDataSourceService.getSimulationDataSources());
     }
 }
