@@ -17,5 +17,7 @@ public class SimulationDTO {
     private String email;
     private String simulationType;
     private String profession;
+    private String scenario;
+    private String simulationDataSource;
 
 }

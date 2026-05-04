@@ -1,6 +1,8 @@
 package com.profession.suggest.database.services.dataanalys.simulation;
 
+import com.profession.suggest.database.entities.dataanalys.simulation.Scenario;
 import com.profession.suggest.database.entities.dataanalys.simulation.Simulation;
+import com.profession.suggest.database.entities.dataanalys.simulation.SimulationDataSource;
 import com.profession.suggest.database.entities.dataanalys.simulation.SimulationType;
 import com.profession.suggest.database.entities.professions.Profession;
 import com.profession.suggest.database.entities.pupil.Pupil;
@@ -28,6 +30,8 @@ public class SimulationService {
     private final SimulationRepository repository;
     private final SimulationTypeService simulationTypeService;
     private final ProfessionService professionService;
+    private final ScenarioService scenarioService;
+    private final SimulationDataSourceService simulationDataSourceService;
     private final PupilService pupilService;
     private final FileStorageService fileStorageService;
     /* TODO
@@ -40,6 +44,8 @@ public class SimulationService {
 
             Simulation simulation = new Simulation();
             SimulationType simulationType = simulationTypeService.getByName(simulationDTO.getSimulationType());
+            Scenario scenario = scenarioService.getScenarioByName(simulationDTO.getScenario());
+            SimulationDataSource simulationDataSource = simulationDataSourceService.getByName(simulationDTO.getSimulationDataSource());
             Profession profession = professionService.getProfessionByName(simulationDTO.getProfession());
             Pupil pupil = pupilService
                     .getPupilByAccountEmail(simulationDTO.getEmail())
@@ -48,6 +54,8 @@ public class SimulationService {
             // that means need to create Account with email and Pupil
             simulation.setSimulationType(simulationType);
             simulation.setProfession(profession);
+            simulation.setScenario(scenario);
+            simulation.setSimulationDataSource(simulationDataSource);
             simulation.setStartSimulation(simulationDTO.getStartSimulation());
             simulation.setEndSimulation(simulationDTO.getEndSimulation());
             simulation.setPupil(pupil);
@@ -64,7 +72,8 @@ public class SimulationService {
     }
     public Page<Simulation> findByFilters(String email,
                                           LocalDateTime startSimulation, LocalDateTime endSimulation,
-                                          String simulationType, String profession, Pageable pageable) {
+                                          String simulationType, String profession, String scenario,
+                                          String simulationDataSource, Pageable pageable) {
         Specification<Simulation> spec = ((root, query, cb) -> cb.conjunction());
         if (email != null && !email.isEmpty())
             spec = spec.and(((root, query, cb) ->
@@ -81,6 +90,12 @@ public class SimulationService {
         if (profession != null && !profession.isEmpty())
             spec = spec.and((root, query, cb) ->
                     cb.equal(root.get("profession").get("name"), profession));
+        if (scenario != null && !scenario.isEmpty())
+            spec = spec.and((((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("scenario").get("name"), scenario))));
+        if (simulationDataSource != null && !simulationDataSource.isEmpty())
+            spec = spec.and(((root, query, criteriaBuilder) -> criteriaBuilder
+                    .equal(root.get("simulationDataSource").get("name"), simulationDataSource)));
         return repository.findAll(spec, pageable);
 
     }
