@@ -1,27 +1,24 @@
 package com.profession.suggest.database.entities.professions;
 
-import com.profession.suggest.database.entities.dataanalys.simulation.Simulation;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Value;
 
 import java.util.List;
 
 @Entity
-@Table(name = "profession")
+@Table(name = "profession_sphere")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Profession {
+public class ProfessionSphere {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name", unique = true)
     private String name;
-    @OneToMany(mappedBy = "profession")
-    private List<Simulation> simulations;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profession_sphere_id")
-    private ProfessionSphere professionSphere;
+    @OneToMany(mappedBy = "professionSphere")
+    private List<Profession> professions;
 }
