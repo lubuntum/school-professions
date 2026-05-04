@@ -5,11 +5,9 @@ import com.profession.suggest.database.entities.auth.Account;
 import com.profession.suggest.database.entities.auth.role.RoleEnum;
 import com.profession.suggest.database.services.auth.AccountService;
 import com.profession.suggest.database.services.profession.ProfessionService;
+import com.profession.suggest.database.services.profession.ProfessionSphereService;
 import com.profession.suggest.database.services.specialist.SpecialistService;
-import com.profession.suggest.dto.specialist.ProfessionDTO;
-import com.profession.suggest.dto.specialist.SpecialistDTO;
-import com.profession.suggest.dto.specialist.SpecialistMapper;
-import com.profession.suggest.dto.specialist.SpecialistRegisterRequest;
+import com.profession.suggest.dto.specialist.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
@@ -30,12 +28,14 @@ import java.util.List;
 public class SpecialistController {
     private final SpecialistService specialistService;
     public final ProfessionService professionService;
+    public final ProfessionSphereService professionSphereService;
     public final AccountService accountService;
 
-    public SpecialistController(SpecialistService specialistService, ProfessionService professionService, AccountService accountService, SpecialistMapper specialistMapper) {
+    public SpecialistController(SpecialistService specialistService, ProfessionService professionService, AccountService accountService, SpecialistMapper specialistMapper, ProfessionSphereService professionSphereService) {
         this.specialistService = specialistService;
         this.professionService = professionService;
         this.accountService = accountService;
+        this.professionSphereService = professionSphereService;
     }
     @HasRole(RoleEnum.ADMIN)
     @PostMapping("/register-all")
@@ -93,6 +93,10 @@ public class SpecialistController {
     @PostMapping("/professions")
     public ResponseEntity<ProfessionDTO> createProfession(@RequestBody ProfessionDTO professionDTO) {
         return ResponseEntity.ok(professionService.createProfession(professionDTO));
+    }
+    @GetMapping("/professions-spheres")
+    public ResponseEntity<List<ProfessionSphereDTO>> getProfessionsSpheres() {
+        return ResponseEntity.ok(professionSphereService.getProfessionsSpheres());
     }
     @GetMapping("/specialist")
     public ResponseEntity<SpecialistDTO> getSpecialist(@RequestAttribute("accountId") Long accountId) throws AccountNotFoundException {
