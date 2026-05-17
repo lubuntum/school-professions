@@ -15,6 +15,8 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -76,6 +78,16 @@ public class PsychTestService {
     public List<PsychTestDTO> getAccountTestsByType(Account account, String testTypeName) {
         validateAccountRoles(account);
         List<PsychTest> psychTests = repository.findByAccountIdAndTestType(account.getId(), testTypeName);
+        return psychTests.stream().map(mapper::toDTO).collect(Collectors.toList());
+    }
+    public List<PsychTestDTO> getCompletedTestsByDateRange(String type, LocalDateTime startDate, LocalDateTime endDate) {
+        List<PsychTest> psychTests;
+        if (Objects.equals(type, "Pupil"))
+            psychTests = repository.findByPupilAndDateRange(startDate, endDate);
+        else if (Objects.equals(type, "Specialist"))
+            psychTests = repository.findBySpecialistAndDateRange(startDate, endDate);
+        else
+            psychTests = repository.findByDateRange(startDate, endDate);
         return psychTests.stream().map(mapper::toDTO).collect(Collectors.toList());
     }
     /**
