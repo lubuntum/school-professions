@@ -74,6 +74,14 @@ public class AuthController {
         }
 
     }
+    @GetMapping("/is-email-free")
+    public ResponseEntity<Boolean> isEmailFree(@RequestParam String email ) {
+        try {
+            return ResponseEntity.ok(accountService.isEmailFree(email));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
     @PostMapping("/protected-test")
     public ResponseEntity<String> testProtectedRoute(){
         return ResponseEntity.ok("This is protected route for testing jwt");
