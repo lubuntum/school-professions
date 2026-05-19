@@ -5,6 +5,7 @@ import com.profession.suggest.database.entities.auth.role.RoleEnum;
 import com.profession.suggest.database.services.auth.AccountService;
 import com.profession.suggest.database.services.dataanalys.psychtests.PsychTestService;
 import com.profession.suggest.database.services.pupil.PupilService;
+import com.profession.suggest.dto.dataanalys.psychtests.AccountTestsDTO;
 import com.profession.suggest.dto.dataanalys.psychtests.PsychTestDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,12 +48,12 @@ public class PsychTestsController {
     }
     @HasRole(RoleEnum.ADMIN)
     @GetMapping("/completed-tests")
-    public ResponseEntity<List<PsychTestDTO>> getCompletedTestsByDates(@RequestParam("type") String type,
-                                               @RequestParam("startDate") LocalDateTime startDate,
-                                               @RequestParam("endDate") LocalDateTime endDate) {
+    public ResponseEntity<List<AccountTestsDTO>> getCompletedTestsByDates(@RequestParam("type") String type,
+                                                                          @RequestParam("startDate") LocalDateTime startDate,
+                                                                          @RequestParam("endDate") LocalDateTime endDate) {
         try {
-            List<PsychTestDTO> testDTOS = psychTestService.getCompletedTestsByDateRange(type, startDate, endDate);
-            return ResponseEntity.ok(testDTOS);
+            //List<PsychTestDTO> testDTOS = psychTestService.getCompletedTestsByDateRange(type, startDate, endDate);
+            return ResponseEntity.ok(psychTestService.getCompletedTestsByDateRange(type, startDate, endDate));
         } catch (Exception e) {
             return ResponseEntity.status(500).build();
         }
