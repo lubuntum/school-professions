@@ -1,7 +1,7 @@
 package com.profession.suggest.dto.pupil.subject;
 
-import com.profession.suggest.database.entities.pupil.subject.PupilGrade;
-import com.profession.suggest.database.entities.pupil.subject.Subject;
+import com.profession.suggest.database.entities.users.pupil.subject.PupilGrade;
+import com.profession.suggest.database.entities.users.pupil.subject.Subject;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
