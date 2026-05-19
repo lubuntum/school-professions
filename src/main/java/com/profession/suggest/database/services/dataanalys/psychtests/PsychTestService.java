@@ -1,24 +1,26 @@
 package com.profession.suggest.database.services.dataanalys.psychtests;
 
 import com.profession.suggest.database.entities.auth.Account;
+import com.profession.suggest.database.entities.auth.role.Role;
 import com.profession.suggest.database.entities.dataanalys.psychtests.PsychParam;
 import com.profession.suggest.database.entities.dataanalys.psychtests.PsychTest;
 import com.profession.suggest.database.entities.dataanalys.psychtests.PsychTestType;
-import com.profession.suggest.database.entities.pupil.Pupil;
-import com.profession.suggest.database.entities.specialist.Specialist;
+import com.profession.suggest.database.entities.users.User;
+import com.profession.suggest.database.entities.users.pupil.Pupil;
+import com.profession.suggest.database.entities.users.specialist.Specialist;
 import com.profession.suggest.database.repositories.dataanalys.psychtests.PsychTestRepository;
 import com.profession.suggest.database.services.pupil.PupilService;
-import com.profession.suggest.database.services.specialist.SpecialistService;
+import com.profession.suggest.dto.dataanalys.psychtests.AccountTestsDTO;
 import com.profession.suggest.dto.dataanalys.psychtests.PsychTestDTO;
 import com.profession.suggest.dto.dataanalys.psychtests.PsychTestMapper;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -80,7 +82,7 @@ public class PsychTestService {
         List<PsychTest> psychTests = repository.findByAccountIdAndTestType(account.getId(), testTypeName);
         return psychTests.stream().map(mapper::toDTO).collect(Collectors.toList());
     }
-    public List<PsychTestDTO> getCompletedTestsByDateRange(String type, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<AccountTestsDTO> getCompletedTestsByDateRange(String type, LocalDateTime startDate, LocalDateTime endDate) {
         List<PsychTest> psychTests;
         if (Objects.equals(type, "Pupil"))
             psychTests = repository.findByPupilAndDateRange(startDate, endDate);
@@ -88,7 +90,28 @@ public class PsychTestService {
             psychTests = repository.findBySpecialistAndDateRange(startDate, endDate);
         else
             psychTests = repository.findByDateRange(startDate, endDate);
-        return psychTests.stream().map(mapper::toDTO).collect(Collectors.toList());
+        Map<Long, AccountTestsDTO> accountMap = new LinkedHashMap<>();
+        for (PsychTest test: psychTests) {
+            User user = test.getPupil() != null ? test.getPupil() : test.getSpecialist();
+            if (user == null) continue;
+            Long accountId = user.getAccount().getId();
+
+            AccountTestsDTO accountDTO = accountMap.computeIfAbsent(accountId,
+                    id -> {
+                        AccountTestsDTO dto = new AccountTestsDTO();
+                        dto.setAccountId(accountId);
+                        dto.setEmail(user.getAccount().getEmail());
+                        dto.setName(user.getName());
+                        dto.setSurname(user.getSurname());
+                        dto.setPatronymic(user.getPatronymic());
+                        dto.setFullName(user.getFullName());
+                        dto.setRoles(user.getAccount().getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
+                        dto.setPsychTests(new ArrayList<>());
+                        return dto;
+                    });
+            accountDTO.getPsychTests().add(mapper.toDTO(test));
+        }
+        return new ArrayList<>(accountMap.values());
     }
     /**
      * Search tests only for the most recent date and only one testType
