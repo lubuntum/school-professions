@@ -1,14 +1,13 @@
-package com.profession.suggest.database.entities.pupil;
+package com.profession.suggest.database.entities.users.pupil;
 
 import com.profession.suggest.database.entities.dataanalys.simulation.Simulation;
 import com.profession.suggest.database.entities.gender.Gender;
 import com.profession.suggest.database.entities.auth.Account;
 import com.profession.suggest.database.entities.dataanalys.psychtests.PsychTest;
-import com.profession.suggest.database.entities.pupil.subject.PupilGrade;
+import com.profession.suggest.database.entities.users.User;
+import com.profession.suggest.database.entities.users.pupil.subject.PupilGrade;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -23,7 +22,7 @@ import java.util.List;
 @EqualsAndHashCode(exclude = {"account", "gender"})
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pupil {
+public class Pupil implements User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

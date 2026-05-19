@@ -1,4 +1,4 @@
-package com.profession.suggest.database.entities.pupil.subject.profile;
+package com.profession.suggest.database.entities.users.pupil.subject.profile;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "interest_level")
+@Table(name = "selection_probability_level")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class InterestLevel {
+public class ProbabilityLevel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

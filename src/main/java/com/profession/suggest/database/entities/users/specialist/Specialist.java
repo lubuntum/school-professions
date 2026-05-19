@@ -1,8 +1,9 @@
-package com.profession.suggest.database.entities.specialist;
+package com.profession.suggest.database.entities.users.specialist;
 
 import com.profession.suggest.database.entities.auth.Account;
 import com.profession.suggest.database.entities.gender.Gender;
 import com.profession.suggest.database.entities.professions.Profession;
+import com.profession.suggest.database.entities.users.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Specialist {
+public class Specialist implements User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

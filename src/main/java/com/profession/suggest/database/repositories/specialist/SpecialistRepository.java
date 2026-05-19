@@ -1,6 +1,6 @@
 package com.profession.suggest.database.repositories.specialist;
 
-import com.profession.suggest.database.entities.specialist.Specialist;
+import com.profession.suggest.database.entities.users.specialist.Specialist;
 import com.profession.suggest.dto.specialist.SpecialistDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

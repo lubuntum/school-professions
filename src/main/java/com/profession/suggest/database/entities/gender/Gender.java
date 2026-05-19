@@ -1,7 +1,7 @@
 package com.profession.suggest.database.entities.gender;
 
-import com.profession.suggest.database.entities.pupil.Pupil;
-import com.profession.suggest.database.entities.specialist.Specialist;
+import com.profession.suggest.database.entities.users.pupil.Pupil;
+import com.profession.suggest.database.entities.users.specialist.Specialist;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

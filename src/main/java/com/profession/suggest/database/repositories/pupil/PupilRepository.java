@@ -1,14 +1,12 @@
 package com.profession.suggest.database.repositories.pupil;
 
-import com.profession.suggest.database.entities.pupil.Pupil;
+import com.profession.suggest.database.entities.users.pupil.Pupil;
 import com.profession.suggest.dto.pupil.PupilResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import javax.swing.text.html.Option;
-import java.util.List;
 import java.util.Optional;
 
 public interface PupilRepository extends JpaRepository<Pupil, Long> {

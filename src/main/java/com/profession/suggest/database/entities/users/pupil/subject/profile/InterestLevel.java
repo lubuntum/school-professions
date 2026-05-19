@@ -1,4 +1,4 @@
-package com.profession.suggest.database.entities.pupil.subject.profile;
+package com.profession.suggest.database.entities.users.pupil.subject.profile;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,15 +7,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "participation_level")
+@Table(name = "interest_level")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class ParticipationLevel {
+public class InterestLevel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "level", nullable = false, unique = true)
-    String level;
+    private String level;
 }

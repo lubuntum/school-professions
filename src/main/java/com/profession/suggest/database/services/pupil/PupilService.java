@@ -5,7 +5,7 @@ import com.profession.suggest.database.entities.auth.role.Role;
 import com.profession.suggest.database.entities.auth.role.RoleEnum;
 import com.profession.suggest.database.entities.gender.Gender;
 import com.profession.suggest.database.entities.gender.GenderEnum;
-import com.profession.suggest.database.entities.pupil.Pupil;
+import com.profession.suggest.database.entities.users.pupil.Pupil;
 import com.profession.suggest.database.repositories.pupil.PupilRepository;
 import com.profession.suggest.database.services.auth.AccountService;
 import com.profession.suggest.database.services.auth.role.RoleService;

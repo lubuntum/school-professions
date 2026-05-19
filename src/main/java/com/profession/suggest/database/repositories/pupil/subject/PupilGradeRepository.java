@@ -1,8 +1,8 @@
 package com.profession.suggest.database.repositories.pupil.subject;
 
-import com.profession.suggest.database.entities.pupil.Pupil;
-import com.profession.suggest.database.entities.pupil.subject.PupilGrade;
-import com.profession.suggest.database.entities.pupil.subject.Subject;
+import com.profession.suggest.database.entities.users.pupil.Pupil;
+import com.profession.suggest.database.entities.users.pupil.subject.PupilGrade;
+import com.profession.suggest.database.entities.users.pupil.subject.Subject;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.profession.suggest.database.entities.dataanalys.simulation;
 
 import com.profession.suggest.database.entities.professions.Profession;
-import com.profession.suggest.database.entities.pupil.Pupil;
+import com.profession.suggest.database.entities.users.pupil.Pupil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

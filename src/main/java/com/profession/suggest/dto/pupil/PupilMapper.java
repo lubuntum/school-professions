@@ -1,6 +1,6 @@
 package com.profession.suggest.dto.pupil;
 
-import com.profession.suggest.database.entities.pupil.Pupil;
+import com.profession.suggest.database.entities.users.pupil.Pupil;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

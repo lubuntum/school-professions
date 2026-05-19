@@ -1,7 +1,7 @@
-package com.profession.suggest.database.entities.pupil.subject.profile;
+package com.profession.suggest.database.entities.users.pupil.subject.profile;
 
-import com.profession.suggest.database.entities.pupil.Pupil;
-import com.profession.suggest.database.entities.pupil.subject.Subject;
+import com.profession.suggest.database.entities.users.pupil.Pupil;
+import com.profession.suggest.database.entities.users.pupil.subject.Subject;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

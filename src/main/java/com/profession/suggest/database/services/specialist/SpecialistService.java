@@ -4,7 +4,7 @@ import com.profession.suggest.database.entities.auth.Account;
 import com.profession.suggest.database.entities.auth.role.RoleEnum;
 import com.profession.suggest.database.entities.gender.Gender;
 import com.profession.suggest.database.entities.professions.Profession;
-import com.profession.suggest.database.entities.specialist.Specialist;
+import com.profession.suggest.database.entities.users.specialist.Specialist;
 import com.profession.suggest.database.repositories.specialist.SpecialistRepository;
 import com.profession.suggest.database.services.auth.AccountService;
 import com.profession.suggest.database.services.gender.GenderService;

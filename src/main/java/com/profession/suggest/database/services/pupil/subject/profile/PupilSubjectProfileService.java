@@ -1,8 +1,8 @@
 package com.profession.suggest.database.services.pupil.subject.profile;
 
-import com.profession.suggest.database.entities.pupil.Pupil;
-import com.profession.suggest.database.entities.pupil.subject.Subject;
-import com.profession.suggest.database.entities.pupil.subject.profile.PupilSubjectProfile;
+import com.profession.suggest.database.entities.users.pupil.Pupil;
+import com.profession.suggest.database.entities.users.pupil.subject.Subject;
+import com.profession.suggest.database.entities.users.pupil.subject.profile.PupilSubjectProfile;
 import com.profession.suggest.database.repositories.pupil.subject.profile.InterestLevelRepository;
 import com.profession.suggest.database.repositories.pupil.subject.profile.ParticipationLevelRepository;
 import com.profession.suggest.database.repositories.pupil.subject.profile.ProbabilityLevelRepository;

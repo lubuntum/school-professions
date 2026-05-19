@@ -1,4 +1,4 @@
-package com.profession.suggest.database.entities.pupil.subject;
+package com.profession.suggest.database.entities.users.pupil.subject;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

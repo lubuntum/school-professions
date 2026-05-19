@@ -1,9 +1,7 @@
 package com.profession.suggest.dto.specialist;
 
 import com.profession.suggest.database.entities.auth.Account;
-import com.profession.suggest.database.entities.specialist.Specialist;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.profession.suggest.database.entities.users.specialist.Specialist;
 import org.springframework.stereotype.Component;
 
 @Component

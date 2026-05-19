@@ -5,7 +5,7 @@ import com.profession.suggest.database.entities.dataanalys.simulation.Simulation
 import com.profession.suggest.database.entities.dataanalys.simulation.SimulationDataSource;
 import com.profession.suggest.database.entities.dataanalys.simulation.SimulationType;
 import com.profession.suggest.database.entities.professions.Profession;
-import com.profession.suggest.database.entities.pupil.Pupil;
+import com.profession.suggest.database.entities.users.pupil.Pupil;
 import com.profession.suggest.database.repositories.dataanalys.simulation.SimulationRepository;
 import com.profession.suggest.database.services.profession.ProfessionService;
 import com.profession.suggest.database.services.pupil.PupilService;
