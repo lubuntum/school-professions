@@ -94,6 +94,11 @@ public class SpecialistController {
     public ResponseEntity<ProfessionDTO> createProfession(@RequestBody ProfessionDTO professionDTO) {
         return ResponseEntity.ok(professionService.createProfession(professionDTO));
     }
+    @DeleteMapping("/professions/{id}")
+    public ResponseEntity<Boolean> deleteProfession(@PathVariable("id") Long id) {
+        professionService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
     @GetMapping("/professions-spheres")
     public ResponseEntity<List<ProfessionSphereDTO>> getProfessionsSpheres() {
         return ResponseEntity.ok(professionSphereService.getProfessionsSpheres());

@@ -20,7 +20,7 @@ public class ProfessionService {
     }
     public List<ProfessionDTO> getProfessions() {
         return repository.findAll().stream()
-                .map(profession -> new ProfessionDTO(profession.getName()))
+                .map(profession -> new ProfessionDTO(profession.getId(), profession.getName()))
                 .collect(Collectors.toList());
     }
     public ProfessionDTO createProfession(ProfessionDTO professionDTO) {
@@ -28,6 +28,10 @@ public class ProfessionService {
             throw new IllegalArgumentException("Profession name cant be empty");
         Profession profession = new Profession();
         profession.setName(professionDTO.getName());
-        return new ProfessionDTO(repository.save(profession).getName());
+        Profession result = repository.save(profession);
+        return new ProfessionDTO(result.getId(), result.getName());
+    }
+    public void deleteById(Long id) {
+        repository.deleteById(id);
     }
 }
