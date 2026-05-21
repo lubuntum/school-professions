@@ -2,6 +2,7 @@ package com.profession.suggest.dto.dataanalys.simulation;
 
 import com.profession.suggest.database.entities.dataanalys.simulation.Scenario;
 import com.profession.suggest.database.entities.dataanalys.simulation.Simulation;
+import com.profession.suggest.database.entities.dataanalys.simulation.SimulationDataSource;
 import com.profession.suggest.database.entities.dataanalys.simulation.SimulationType;
 import com.profession.suggest.database.entities.professions.Profession;
 import com.profession.suggest.database.entities.users.pupil.Pupil;
@@ -39,7 +40,9 @@ public class SimulationMapper {
         dto.setScenario(Optional.ofNullable(simulation.getScenario())
                 .map(Scenario::getName)
                 .orElse(null));
-
+        dto.setSimulationDataSource(Optional.ofNullable(simulation.getSimulationDataSource())
+                .map(SimulationDataSource::getName)
+                .orElse(null));
         dto.setFilePath(simulation.getFilePath());
         dto.setCreatedAt(simulation.getCreatedAt());
         return dto;
