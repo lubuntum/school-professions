@@ -21,7 +21,15 @@ public class ProfessionSphereService {
     }
     public List<ProfessionSphereDTO> getProfessionsSpheres() {
         return repository.findAll().stream()
-                .map(sphere -> new ProfessionSphereDTO(sphere.getName()))
+                .map(sphere -> new ProfessionSphereDTO(sphere.getId(), sphere.getName()))
                 .collect(Collectors.toList());
+    }
+    public ProfessionSphereDTO create (ProfessionSphereDTO dto) {
+        ProfessionSphere sphere = new ProfessionSphere();
+        sphere.setName(dto.getName());
+        return new ProfessionSphereDTO(repository.save(sphere).getId(), dto.getName());
+    }
+    public void deleteById (Long id) {
+        repository.deleteById(id);
     }
 }

@@ -103,6 +103,15 @@ public class SpecialistController {
     public ResponseEntity<List<ProfessionSphereDTO>> getProfessionsSpheres() {
         return ResponseEntity.ok(professionSphereService.getProfessionsSpheres());
     }
+    @PostMapping("/professions-spheres")
+    public ResponseEntity<ProfessionSphereDTO> createProfessionSphere(@RequestBody ProfessionSphereDTO professionSphereDTO) {
+        return ResponseEntity.ok(professionSphereService.create(professionSphereDTO));
+    }
+    @DeleteMapping("/professions-spheres/{id}")
+    public ResponseEntity<Boolean> deleteProfessionSphere(@PathVariable("id") Long id) {
+        professionSphereService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
     @GetMapping("/specialist")
     public ResponseEntity<SpecialistDTO> getSpecialist(@RequestAttribute("accountId") Long accountId) throws AccountNotFoundException {
         return ResponseEntity.ok(
