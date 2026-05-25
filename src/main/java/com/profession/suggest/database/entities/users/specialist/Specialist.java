@@ -1,6 +1,7 @@
 package com.profession.suggest.database.entities.users.specialist;
 
 import com.profession.suggest.database.entities.auth.Account;
+import com.profession.suggest.database.entities.dataanalys.psychtests.PsychTest;
 import com.profession.suggest.database.entities.gender.Gender;
 import com.profession.suggest.database.entities.professions.Profession;
 import com.profession.suggest.database.entities.users.User;
@@ -9,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "specialist")
@@ -43,4 +46,6 @@ public class Specialist implements User {
     @ManyToOne()
     @JoinColumn(name = "gender_id")
     private Gender gender;
+    @OneToMany(mappedBy = "specialist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PsychTest> psychTests;
 }
