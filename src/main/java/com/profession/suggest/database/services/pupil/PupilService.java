@@ -13,6 +13,7 @@ import com.profession.suggest.database.services.gender.GenderService;
 import com.profession.suggest.dto.auth.AccountApiRegisterDTO;
 import com.profession.suggest.dto.auth.AccountMapper;
 import com.profession.suggest.dto.auth.AccountRegisterRequestDTO;
+import com.profession.suggest.dto.pupil.PupilCompleteDTO;
 import com.profession.suggest.dto.pupil.PupilDTO;
 import com.profession.suggest.dto.pupil.PupilMapper;
 import com.profession.suggest.dto.pupil.PupilResponseDTO;
@@ -28,9 +29,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
 import javax.security.auth.login.AccountNotFoundException;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -153,5 +156,12 @@ public class PupilService {
     }
     public Optional<Pupil> getPupilByAccountEmail(String email) {
         return repository.findByAccountEmail(email);
+    }
+    public List<PupilCompleteDTO> getCompletePupilsListBetween(LocalDate startDate, LocalDate endDate) {
+        List<Pupil> pupils = repository.findByAccountCreatedAtBetween(startDate, endDate);
+
+        return pupils.stream()
+                .map(pupilMapper::toCompleteDTO)
+                .collect(Collectors.toList());
     }
 }

@@ -1,7 +1,10 @@
 package com.profession.suggest.controllers.pupil;
 
+import com.profession.suggest.configuration.security.annotation.HasRole;
+import com.profession.suggest.database.entities.auth.role.RoleEnum;
 import com.profession.suggest.database.services.auth.AccountService;
 import com.profession.suggest.database.services.pupil.PupilService;
+import com.profession.suggest.dto.pupil.PupilCompleteDTO;
 import com.profession.suggest.dto.pupil.PupilDTO;
 import com.profession.suggest.dto.pupil.PupilResponseDTO;
 import org.springframework.data.domain.Page;
@@ -13,6 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * TODO
@@ -49,6 +56,22 @@ public class PupilController {
     @PostMapping("/update-pupil-data")
     public ResponseEntity<PupilDTO> updatePupilData(@RequestBody PupilDTO dto , @RequestAttribute("accountId") Long accountId) throws AccountNotFoundException {
         return ResponseEntity.ok(pupilService.updatePupilData(dto, accountId));
+    }
+    @HasRole(RoleEnum.ADMIN)
+    @GetMapping("/completed-tests")
+    public ResponseEntity<?> getCompletedTestsByDates(@RequestParam("startDate") LocalDate startDate,
+                                                                           @RequestParam("endDate") LocalDate endDate) {
+        try{
+            return ResponseEntity.ok(pupilService.getCompletePupilsListBetween(startDate, endDate));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(Map.of(
+                            "error", "Failed to fetch pupils data",
+                            "message", e.getMessage(),
+                            "cause", e.getCause() != null ? e.getCause().getMessage() : "Unknown"
+                    ));
+        }
+
     }
 
 }

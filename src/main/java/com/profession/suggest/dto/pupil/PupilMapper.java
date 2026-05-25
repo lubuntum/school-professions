@@ -1,12 +1,21 @@
 package com.profession.suggest.dto.pupil;
 
+import com.profession.suggest.database.entities.auth.role.Role;
 import com.profession.suggest.database.entities.users.pupil.Pupil;
+import com.profession.suggest.dto.dataanalys.psychtests.PsychTestMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class PupilMapper {
+    private final PsychTestMapper psychTestMapper;
+
+    public PupilMapper(PsychTestMapper psychTestMapper) {
+        this.psychTestMapper = psychTestMapper;
+    }
+
     public Pupil fromDTO(PupilDTO dto) {
         Pupil pupil = new Pupil();
         pupil.setName(dto.getName());
@@ -50,5 +59,14 @@ public class PupilMapper {
         Optional.ofNullable(dto.getClassNumber()).ifPresent(pupil::setClassNumber);
         Optional.ofNullable(dto.getClassLabel()).ifPresent(pupil::setClassLabel);
         return pupil;
+    }
+    public PupilCompleteDTO toCompleteDTO(Pupil pupil) {
+        PupilCompleteDTO dto = new PupilCompleteDTO();
+        PupilDTO pupilDTO = toDTO(pupil);
+        dto.setPupil(pupilDTO);
+        dto.setAccountId(pupil.getAccount().getId());
+        dto.setRoles(pupil.getAccount().getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
+        dto.setPsychTests(pupil.getPsychTests().stream().map(psychTestMapper::toDTO).collect(Collectors.toList()));
+        return dto;
     }
 }
