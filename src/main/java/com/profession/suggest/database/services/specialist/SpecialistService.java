@@ -9,6 +9,8 @@ import com.profession.suggest.database.repositories.specialist.SpecialistReposit
 import com.profession.suggest.database.services.auth.AccountService;
 import com.profession.suggest.database.services.gender.GenderService;
 import com.profession.suggest.database.services.profession.ProfessionService;
+import com.profession.suggest.dto.dataanalys.psychtests.PsychTestMapper;
+import com.profession.suggest.dto.specialist.SpecialistCompleteDTO;
 import com.profession.suggest.dto.specialist.SpecialistDTO;
 import com.profession.suggest.dto.specialist.SpecialistMapper;
 import com.profession.suggest.dto.specialist.SpecialistRegisterRequest;
@@ -16,19 +18,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SpecialistService {
     private final SpecialistRepository repository;
     private final ProfessionService professionService;
     private final SpecialistMapper mapper;
+    private final PsychTestMapper psychTestMapper;
     private final GenderService genderService;
     private final AccountService accountService;
-    public SpecialistService(SpecialistRepository repository, ProfessionService professionService, SpecialistMapper mapper, GenderService genderService, AccountService accountService) {
+    public SpecialistService(SpecialistRepository repository, ProfessionService professionService, SpecialistMapper mapper, PsychTestMapper psychTestMapper, GenderService genderService, AccountService accountService) {
         this.repository = repository;
         this.professionService = professionService;
         this.mapper = mapper;
+        this.psychTestMapper = psychTestMapper;
         this.genderService = genderService;
         this.accountService = accountService;
     }
@@ -93,5 +99,12 @@ public class SpecialistService {
         if (profession != null)
             specialist.setProfession(profession);
         return mapper.toDTO(repository.save(specialist), account);
+    }
+    public List<SpecialistCompleteDTO> getCompleteSpecialistsListBetween(LocalDate startDate, LocalDate endDate) {
+        List<Specialist> specialists = repository.findByAccountCreatedAtBetween(startDate, endDate);
+
+        return specialists.stream()
+                .map(mapper::toCompleteDTO)
+                .collect(Collectors.toList());
     }
 }

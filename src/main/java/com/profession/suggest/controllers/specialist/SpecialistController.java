@@ -19,7 +19,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+
 //TODO add some specialists and check if all transfer good
 // - start working for auto creating a bunch of specialists from xlsx client side
 @RestController
@@ -117,4 +120,22 @@ public class SpecialistController {
         return ResponseEntity.ok(
                 specialistService.getSpecialistByAccount(accountService.getAccountById(accountId)));
     }
+    @HasRole(RoleEnum.ADMIN)
+    @GetMapping("/completed-tests")
+    public ResponseEntity<?> getCompletedTestsByDates(@RequestParam("startDate") LocalDate startDate,
+                                                      @RequestParam("endDate") LocalDate endDate) {
+        try {
+            return ResponseEntity.ok(specialistService.getCompleteSpecialistsListBetween(startDate, endDate));
+        }
+        catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(Map.of(
+                            "error", "Failed to fetch specialist data",
+                            "message", e.getMessage(),
+                            "cause", e.getCause() != null ? e.getCause().getMessage() : "Unknown"
+                    ));
+        }
+
+    }
+
 }
