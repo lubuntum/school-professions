@@ -22,15 +22,18 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtValidationInterceptor)
                 .addPathPatterns(
                         "/api/auth/protected-test",
-                        "/api/pupils/pupil-data",
-                        "/api/pupils/update-pupil-data",
                         "/api/psych-tests/**",
                         "/api/auth/account-roles",
                         "/api/pupil-subjects/**",
 
+                        "/api/pupils/pupil-data",
+                        "/api/pupils/update-pupil-data",
+                        "/api/pupils/completed-tests",
+
                         "/api/specialists/specialist",
                         "/api/specialists/update",
-                        "/api/specialists/register-all"
+                        "/api/specialists/register-all",
+                        "/api/specialists/completed-tests"
                 );
     }
 
