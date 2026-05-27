@@ -74,7 +74,7 @@ public class SimulationService {
                                           LocalDateTime startSimulation, LocalDateTime endSimulation,
                                           String simulationType, String profession, String scenario,
                                           String simulationDataSource, Pageable pageable) {
-        Specification<Simulation> spec = ((root, query, cb) -> cb.conjunction());
+        Specification<Simulation> spec = (root, query, cb) -> cb.conjunction();
         if (email != null && !email.isEmpty())
             spec = spec.and(((root, query, cb) ->
                     cb.equal(root.get("pupil").get("account").get("email"), email)));
