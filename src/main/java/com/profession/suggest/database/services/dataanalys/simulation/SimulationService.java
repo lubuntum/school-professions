@@ -10,7 +10,9 @@ import com.profession.suggest.database.repositories.dataanalys.simulation.Simula
 import com.profession.suggest.database.services.profession.ProfessionService;
 import com.profession.suggest.database.services.pupil.PupilService;
 import com.profession.suggest.dto.dataanalys.simulation.SimulationDTO;
+import com.profession.suggest.dto.dataanalys.simulation.SimulationMapper;
 import com.profession.suggest.services.files.FileStorageService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -34,6 +36,7 @@ public class SimulationService {
     private final SimulationDataSourceService simulationDataSourceService;
     private final PupilService pupilService;
     private final FileStorageService fileStorageService;
+    private final SimulationMapper mapper;
     /* TODO
     * simulation can be created even if account with email doesn't exists
     * (register account with default password and default pupil and continue)
@@ -98,5 +101,11 @@ public class SimulationService {
                     .equal(root.get("simulationDataSource").get("name"), simulationDataSource)));
         return repository.findAll(spec, pageable);
 
+    }
+    public SimulationDTO updateDescriptionById(Long id, String description) {
+        Simulation simulation = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cant find a simulation with id = " + id ));
+        simulation.setDescription(description);
+        return mapper.toDTO(repository.save(simulation), simulation.getPupil().getAccount().getEmail());
     }
 }

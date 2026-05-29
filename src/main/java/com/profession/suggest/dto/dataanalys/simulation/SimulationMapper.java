@@ -28,6 +28,7 @@ public class SimulationMapper {
     }
     public SimulationDTO toDTO(Simulation simulation, String email) {
         SimulationDTO dto = new SimulationDTO();
+        dto.setId(simulation.getId());
         dto.setEmail(email);
         dto.setStartSimulation(simulation.getStartSimulation());
         dto.setEndSimulation(simulation.getEndSimulation());
@@ -43,6 +44,7 @@ public class SimulationMapper {
         dto.setSimulationDataSource(Optional.ofNullable(simulation.getSimulationDataSource())
                 .map(SimulationDataSource::getName)
                 .orElse(null));
+        dto.setDescription(simulation.getDescription());
         dto.setFilePath(simulation.getFilePath());
         dto.setCreatedAt(simulation.getCreatedAt());
         return dto;

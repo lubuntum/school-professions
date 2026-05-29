@@ -61,6 +61,12 @@ public class SimulationController {
                 simulations.map(s -> simulationMapper.toResponseDTO(
                         s, s.getPupil().getAccount() != null ? s.getPupil().getAccount().getEmail() : null)));
     }
+    @PatchMapping("/{simulationId}/description")
+    public ResponseEntity<SimulationDTO> updateDescription(@PathVariable("simulationId") Long simulationId,
+                                               @RequestBody String description) {
+        ;
+        return ResponseEntity.ok(simulationService.updateDescriptionById(simulationId, description));
+    }
     @GetMapping("/types")
     public ResponseEntity<List<SimulationTypeDTO>> getSimulationTypes() {
         return ResponseEntity.ok(simulationTypeService.getSimulationTypes());

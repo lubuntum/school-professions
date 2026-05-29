@@ -26,6 +26,8 @@ public class Simulation {
     private LocalDateTime startSimulation;
     @Column(name = "end_sim")
     private LocalDateTime endSimulation;
+    @Column(name = "description", nullable = true)
+    private String description;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     @ManyToOne(fetch = FetchType.LAZY)

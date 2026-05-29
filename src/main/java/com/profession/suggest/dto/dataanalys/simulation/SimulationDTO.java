@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SimulationDTO {
+    private Long id;
     private String filePath;
     private LocalDateTime startSimulation;
     private LocalDateTime endSimulation;
@@ -19,5 +20,6 @@ public class SimulationDTO {
     private String profession;
     private String scenario;
     private String simulationDataSource;
+    private String description;
 
 }
