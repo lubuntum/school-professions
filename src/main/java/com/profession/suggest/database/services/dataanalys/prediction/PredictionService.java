@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -49,5 +51,11 @@ public class PredictionService {
         prediction.setFilePath(fileStorageService.saveFile(file, "predictions", true));
         prediction.setPupil(pupil);
         return mapper.toDTO(repository.save(prediction));
+    }
+    public List<PredictionDTO> getPredictionsByPupilId(Long pupilId) {
+        List<Prediction> predictions = repository.findByPupilId(pupilId);
+        return predictions.stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

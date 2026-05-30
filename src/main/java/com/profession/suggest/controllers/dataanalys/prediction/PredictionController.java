@@ -1,13 +1,13 @@
 package com.profession.suggest.controllers.dataanalys.prediction;
 
+import com.profession.suggest.database.entities.dataanalys.prediction.Prediction;
 import com.profession.suggest.database.services.dataanalys.prediction.PredictionService;
 import com.profession.suggest.dto.dataanalys.prediction.PredictionDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/predictions")
@@ -26,5 +26,11 @@ public class PredictionController {
             return ResponseEntity.status(500)
                     .body("Please check all required parameters, cant save prediction");
         }
+    }
+    @GetMapping("/pupil/{pupilId}")
+    public ResponseEntity<List<PredictionDTO>> getPredictionsByPupilId(
+            @PathVariable("pupilId") Long pupilId
+    ) {
+        return ResponseEntity.ok(predictionService.getPredictionsByPupilId(pupilId));
     }
 }
