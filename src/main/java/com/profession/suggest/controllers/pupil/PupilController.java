@@ -3,8 +3,9 @@ package com.profession.suggest.controllers.pupil;
 import com.profession.suggest.configuration.security.annotation.HasRole;
 import com.profession.suggest.database.entities.auth.role.RoleEnum;
 import com.profession.suggest.database.services.auth.AccountService;
+import com.profession.suggest.database.services.dataanalys.prediction.PredictionService;
 import com.profession.suggest.database.services.pupil.PupilService;
-import com.profession.suggest.dto.pupil.PupilCompleteDTO;
+import com.profession.suggest.dto.dataanalys.prediction.PredictionDTO;
 import com.profession.suggest.dto.pupil.PupilDTO;
 import com.profession.suggest.dto.pupil.PupilResponseDTO;
 import org.springframework.data.domain.Page;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -32,10 +32,12 @@ public class PupilController {
 
     private final PupilService pupilService;
     private final AccountService accountService;
+    private final PredictionService predictionService;
 
-    public PupilController(PupilService pupilService, AccountService accountService) {
+    public PupilController(PupilService pupilService, AccountService accountService, PredictionService predictionService) {
         this.pupilService = pupilService;
         this.accountService = accountService;
+        this.predictionService = predictionService;
     }
 
     @GetMapping()
@@ -71,6 +73,13 @@ public class PupilController {
                             "cause", e.getCause() != null ? e.getCause().getMessage() : "Unknown"
                     ));
         }
+
+    }
+    @GetMapping("/pupil/predictions")
+    public ResponseEntity<List<PredictionDTO>> getPupilPredictions(@RequestAttribute("accountId") Long accountId) {
+        return ResponseEntity.ok(
+                predictionService.getPredictionsByPupilId(
+                        pupilService.getPupilByAccountId(accountId).getId()));
 
     }
 

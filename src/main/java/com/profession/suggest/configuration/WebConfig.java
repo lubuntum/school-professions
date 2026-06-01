@@ -29,6 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/pupils/pupil-data",
                         "/api/pupils/update-pupil-data",
                         "/api/pupils/completed-tests",
+                        "/api/pupils/pupil/predictions",
 
                         "/api/specialists/specialist",
                         "/api/specialists/update",
