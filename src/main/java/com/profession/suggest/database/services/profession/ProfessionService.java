@@ -34,4 +34,7 @@ public class ProfessionService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+    public Profession getProfessionById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Cant find profession by id " + id));
+    }
 }

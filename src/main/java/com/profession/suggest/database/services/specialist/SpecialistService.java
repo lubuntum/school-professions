@@ -107,4 +107,8 @@ public class SpecialistService {
                 .map(mapper::toCompleteDTO)
                 .collect(Collectors.toList());
     }
+    public Specialist getSpecialistById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No specialist with id " + id));
+    }
 }

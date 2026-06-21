@@ -57,7 +57,7 @@ public class PupilService {
     @Value("${pupil.default.gender:MALE}")
     private GenderEnum defaultGender;
     public Pupil getPupilById(Long id) {
-        return repository.getReferenceById(id);
+        return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Cant find pupil with id " + id));
     }
     public Pupil getPupilByAccountId(Long accountId) {
         return repository.findByAccountId(accountId);

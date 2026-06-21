@@ -1,10 +1,9 @@
 package com.profession.suggest.database.entities.professions;
 
 import com.profession.suggest.database.entities.dataanalys.simulation.Simulation;
+import com.profession.suggest.database.entities.dataanalys.vrtests.VRTest;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -12,7 +11,8 @@ import java.util.List;
 @Table(name = "profession")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class Profession {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +21,8 @@ public class Profession {
     private String name;
     @OneToMany(mappedBy = "profession")
     private List<Simulation> simulations;
+    @OneToMany(mappedBy = "profession")
+    private List<VRTest> vrTests;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profession_sphere_id")
     private ProfessionSphere professionSphere;
