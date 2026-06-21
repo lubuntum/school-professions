@@ -22,5 +22,8 @@ public class VRTestAnswerService {
     public List<VRTestAnswer> createAll(Set<VRTestAnswer> answers) {
         return repository.saveAll(answers);
     }
+    public void delete(VRTestAnswer answer) {
+        repository.delete(answer);
+    }
 
 }
