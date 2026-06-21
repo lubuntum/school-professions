@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -17,4 +19,5 @@ public class VRTestDTO {
     private Long specialistId;
     private Double completionTimeSeconds;
     private List<AnswerDTO> answers;
+    private LocalDateTime createdAt;
 }
