@@ -21,8 +21,6 @@ public class VRTestController {
     private final VRTestService vrTestService;
     private final AccountService accountService;
 
-
-
     @PostMapping
     public ResponseEntity<?> createTest(@RequestBody VRTestDTO dto,
                                         @RequestAttribute("accountId") Long accountId){
@@ -46,6 +44,12 @@ public class VRTestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to fetch tests: " + e.getMessage());
         }
+    }
+    @GetMapping("/my-tests/profession/{professionId}")
+    public ResponseEntity<?> getAccountTestsByProfession(
+            @RequestAttribute("accountId") Long accountId,
+            @PathVariable Long professionId) throws AccountNotFoundException {
+        return ResponseEntity.ok(vrTestService.getTestsByAccountIdAndProfessionId(accountId, professionId));
     }
     @DeleteMapping("/my-tests/profession/{professionId}")
     public ResponseEntity<?> resetMyTestsByProfession(
