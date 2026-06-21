@@ -14,6 +14,7 @@ public class VRTestMapper {
         dto.setId(test.getId());
         dto.setCompletionTimeSeconds(test.getCompletionTimeSeconds());
         dto.setTypeName(test.getType().getName());
+        dto.setProfessionId(test.getProfession().getId());
         if (test.getPupil() != null)
             dto.setPupilId(test.getPupil().getId());
         else if (test.getSpecialist() != null)
@@ -26,6 +27,7 @@ public class VRTestMapper {
             answersDTOs.add(answerDTO);
         }
         dto.setAnswers(answersDTOs);
+        dto.setCreatedAt(test.getCreatedAt());
         return dto;
     }
 }
