@@ -111,4 +111,7 @@ public class SpecialistService {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No specialist with id " + id));
     }
+    public Specialist save(Specialist specialist) {
+        return repository.save(specialist);
+    }
 }
