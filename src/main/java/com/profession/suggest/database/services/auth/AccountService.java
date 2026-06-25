@@ -81,4 +81,10 @@ public class AccountService {
         Account account = getAccountById((accountId));
         return account.getRoles();
     }
+    //good for getting all HR's accounts and etc
+    public Set<Account> getAccountsByRole(RoleEnum roleName) {
+        Role role = roleService.findByName(roleName);
+        return role.getAccounts();
+    }
+
 }
