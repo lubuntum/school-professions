@@ -48,4 +48,9 @@ public class Specialist implements User {
     private Gender gender;
     @OneToMany(mappedBy = "specialist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PsychTest> psychTests;
+    @ManyToOne()
+    @JoinColumn(name = "company_id")
+    private Company company;
+    @OneToMany(mappedBy = "invitedBy")
+    private List<Invitation> sentInvitations;
 }
