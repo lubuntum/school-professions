@@ -7,11 +7,10 @@ import com.profession.suggest.database.entities.users.specialist.Specialist;
 import com.profession.suggest.database.repositories.specialist.CompanyRepository;
 import com.profession.suggest.database.services.auth.AccountService;
 import com.profession.suggest.dto.auth.AccountRegisterRequestDTO;
-import com.profession.suggest.dto.company.CreateHRRequest;
-import com.profession.suggest.dto.company.HRMapper;
-import com.profession.suggest.dto.company.HRResponse;
+import com.profession.suggest.dto.company.*;
 import com.profession.suggest.dto.specialist.SpecialistDTO;
 import com.profession.suggest.dto.specialist.SpecialistMapper;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.BadRequestException;
@@ -30,14 +29,16 @@ public class CompanyService {
     private final AccountService accountService;
     private final SpecialistService specialistService;
 
-    private final HRMapper hrMapper;
+    private final CreateSpecialistMapper createSpecialistMapper;
     private final SpecialistMapper specialistMapper;
+    private final CompanyMapper companyMapper;
+    private final EntityManager entityManager;
 
     /**
      * Get company by account ID
      * Checks if user is a specialist and has a company
      */
-    public Company getCompanyByAccountId(Long accountId) throws AccountNotFoundException {
+    public CompanyDTO getCompanyByAccountId(Long accountId) throws AccountNotFoundException {
         Account account = accountService.getAccountById(accountId);
 
         // Check if user is a specialist
@@ -52,7 +53,7 @@ public class CompanyService {
             throw new IllegalArgumentException("No company assigned to this user");
         }
 
-        return company;
+        return companyMapper.toDTO(company);
     }
 
     /**
@@ -100,15 +101,15 @@ public class CompanyService {
                 .collect(Collectors.toList());
     }
 
-    public List<HRResponse> getHRsWithCompanies() {
+    public List<CreateSpecialistResponse> getHRsWithCompanies() {
         Set<Account> accounts = accountService.getAccountsByRole(RoleEnum.HR);
         return accounts.stream()
-                .map(hrMapper::toDTO)
+                .map(createSpecialistMapper::toDTO)
                 .collect(Collectors.toList());
 
     }
     @Transactional
-    public HRResponse createHRWithCompany(CreateHRRequest request) throws BadRequestException {
+    public CreateSpecialistResponse createSpecialistWithCompany(CreateSpecialistRequest request) throws BadRequestException, AccountNotFoundException {
         // 1. Validate email
         if (!accountService.isEmailFree(request.getEmail())) {
             throw new BadRequestException("Email already in use: " + request.getEmail());
@@ -119,12 +120,15 @@ public class CompanyService {
         if (company == null) {
             company = createCompany(request);  // Returns saved company
         }
+        RoleEnum role = request.getRole() == AllowedRole.HR
+                ? RoleEnum.HR
+                : RoleEnum.SPECIALIST;
 
-        // 3. Create Account with HR role
+        // 3. Create Account with role
         AccountRegisterRequestDTO accountDTO = new AccountRegisterRequestDTO();
         accountDTO.setEmail(request.getEmail());
         accountDTO.setPassword(request.getPassword());
-        Account account = accountService.registration(accountDTO, RoleEnum.HR);
+        Account account = accountService.registration(accountDTO, role);
 
         // 4. Create Specialist (HR profile) and link to company
         Specialist specialist = new Specialist();
@@ -143,11 +147,11 @@ public class CompanyService {
         }
         company.getSpecialists().add(savedSpecialist);
         repository.save(company);  // Save company with updated specialists list
-
-        return hrMapper.toDTO(account);
+        entityManager.refresh(account);
+        return createSpecialistMapper.toDTO(account);//with refreshed account data
     }
 
-    private Company createCompany(CreateHRRequest request) {
+    private Company createCompany(CreateSpecialistRequest request) {
         Company company = new Company();
         company.setName(request.getCompanyName());  // FIXED: Set name
         company.setInn(request.getCompanyInn());

@@ -6,9 +6,9 @@ import com.profession.suggest.database.entities.users.specialist.Specialist;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HRMapper {
-    public HRResponse toDTO(Account account) {
-        HRResponse response = new HRResponse();
+public class CreateSpecialistMapper {
+    public CreateSpecialistResponse toDTO(Account account) {
+        CreateSpecialistResponse response = new CreateSpecialistResponse();
         response.setEmail(account.getEmail());
         response.setAccountId(account.getId());
 

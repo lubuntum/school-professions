@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateHRRequest {
+public class CreateSpecialistRequest {
     // Account fields
     private String email;
     private String password;
+    private AllowedRole role;
     //HR fields (as Specialist)
     private String name;
     private String surname;

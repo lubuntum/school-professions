@@ -38,7 +38,10 @@ public class WebConfig implements WebMvcConfigurer {
 
                         "/api/predictions/create",
 
-                        "/api/vr-tests/**"
+                        "/api/vr-tests/**",
+
+                        "/api/hr/**",
+                        "/api/company/**"
                 );
     }
 
