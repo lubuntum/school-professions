@@ -34,8 +34,11 @@ public class CompanyController {
                     .body(e.getMessage());
         }
     }
+    /**
+     * Return all connected specialists by account's company
+     * */
     @GetMapping("/specialists")
-    public ResponseEntity<?> getCompanySpecialistsDTO(@RequestAttribute("accountId") Long accountId) {
+    public ResponseEntity<?> getSpecialistsByCompany (@RequestAttribute("accountId") Long accountId) {
         try {
             List<SpecialistDTO> specialists = companyService.getSpecialistDTOsByHRAccountId(accountId);
             return ResponseEntity.ok(specialists);
