@@ -31,10 +31,18 @@ public class FileStorageService {
             throw new IOException("Failed to save file to " + subfolder, e);
         }
     }
-    public Boolean deleteFile(String fileName) throws IOException {
+    public Boolean deleteFile(String filePath) throws IOException {
         try{
-            Path filePath = Paths.get(baseFolder, fileName);
-            return Files.deleteIfExists(filePath);
+            String relativePath = filePath;
+            if (relativePath.startsWith("public/")) {
+                relativePath = relativePath.substring("public/".length());
+            }
+            // Now relativePath = "comparison/collections/3/1_xxx.png"
+
+            //Build full path: baseFolder + "public" + relativePath
+            Path fullPath = Paths.get(baseFolder, relativePath);
+
+            return Files.deleteIfExists(fullPath);
         } catch (Exception e) {
             //throw new RegularException("Error while deleting file", HttpStatus.INTERNAL_SERVER_ERROR.value());
             System.err.println("Error while deleting file: " + e.getMessage());
