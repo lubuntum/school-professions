@@ -5,12 +5,15 @@ import com.profession.suggest.database.entities.auth.Account;
 import com.profession.suggest.database.entities.dataanalys.comparison.ComparisonCollection;
 import com.profession.suggest.database.entities.dataanalys.comparison.ComparisonSession;
 import com.profession.suggest.database.repositories.dataanalys.comparison.ComparisonSessionRepository;
+import com.profession.suggest.dto.dataanalys.comparison.SessionData;
 import com.profession.suggest.dto.dataanalys.comparison.SessionResponseDTO;
 import com.profession.suggest.dto.dataanalys.comparison.SessionSubmitRequest;
 import com.profession.suggest.services.files.FileStorageService;
+import com.profession.suggest.services.json.JsonParserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,57 +31,52 @@ public class ComparisonSessionService {
     private final ComparisonSessionRepository repository;
     private final ComparisonCollectionService collectionService;
     private final FileStorageService fileStorageService;
+    private final JsonParserService jsonParserService;
 
     /**
      * Submit a completed comparison test session
      * Saves the JSON file and creates a session record
      */
     @Transactional
-    public ComparisonSession submitSession(Account account, SessionSubmitRequest request) throws IOException {
-        log.info("Submitting comparison session for account: {}, clientSessionId: {}",
-                account.getId(), request.getClientSessionId());
-
+    public SessionResponseDTO submitSession(Account account, MultipartFile dataFile) throws IOException {
+        log.info("Submitting comparison session for account: {}", account.getId());
+        SessionData sessionData = jsonParserService.parseJsonToClass(dataFile, SessionData.class);
         // 1. Validate
-        if (request.getClientSessionId() == null || request.getClientSessionId().isEmpty()) {
+        if (sessionData.getClientSessionId() == null || sessionData.getClientSessionId().isEmpty()) {
             throw new IllegalArgumentException("clientSessionId is required");
+        }
+        if (sessionData.getCollectionId() == null) {
+            throw new IllegalArgumentException("collectionId is required");
         }
 
         // Check if session already exists
-        if (repository.findByClientSessionId(request.getClientSessionId()).isPresent()) {
-            throw new IllegalArgumentException("Session already exists: " + request.getClientSessionId());
+        if (repository.findByClientSessionId(sessionData.getClientSessionId()).isPresent()) {
+            throw new IllegalArgumentException("Session already exists: " + sessionData.getClientSessionId());
         }
 
         // 2. Get collection
-        ComparisonCollection collection = collectionService.findById(request.getCollectionId())
-                .orElseThrow(() -> new IllegalArgumentException("Collection not found: " + request.getCollectionId()));
+        ComparisonCollection collection = collectionService.findById(sessionData.getCollectionId())
+                .orElseThrow(() -> new IllegalArgumentException("Collection not found: " + sessionData.getCollectionId()));
 
-        // 3. Save the JSON file
-        MultipartFile dataFile = request.getDataFile();
-        if (dataFile == null || dataFile.isEmpty()) {
-            throw new IllegalArgumentException("Data file is required");
-        }
-
-        String subfolder = "comparison/sessions/" + LocalDateTime.now().getYear() + "/" +
-                String.format("%02d", LocalDateTime.now().getMonthValue());
-
-        String filePath = fileStorageService.saveFile(dataFile, subfolder, false);
+        String subfolder = "comparison/sessions";
+        String filePath = fileStorageService.saveFile(dataFile, subfolder, true);
         log.info("Saved session file: {}", filePath);
 
         // 4. Create session record
         ComparisonSession session = new ComparisonSession();
-        session.setClientSessionId(request.getClientSessionId());
+        session.setClientSessionId(sessionData.getClientSessionId());
         session.setFilePath(filePath);
-        session.setAppVersion(request.getAppVersion());
-        session.setDataSchemaVersion(request.getDataSchemaVersion());
-        session.setDataSourceMode(request.getDataSourceMode());
-        session.setStartedAt(request.getStartedAt());
-        session.setCompletedAt(request.getCompletedAt());
-        session.setTotalDurationSeconds(request.getTotalDurationSeconds());
-        session.setIsCompleted(request.getIsCompleted());
-        session.setEyeTrackingAvailable(request.getEyeTrackingAvailable());
-        session.setFaceTrackingAvailable(request.getFaceTrackingAvailable());
-        session.setUploadStatus(request.getUploadStatus() != null ? request.getUploadStatus() : "uploaded");
-        session.setRecordCount(request.getRecordCount());
+        session.setAppVersion(sessionData.getAppVersion());
+        session.setDataSchemaVersion(sessionData.getDataSchemaVersion());
+        session.setDataSourceMode(sessionData.getDataSourceMode());
+        session.setStartedAt(sessionData.getStartedAt());
+        session.setCompletedAt(sessionData.getCompletedAt());
+        session.setTotalDurationSeconds(sessionData.getTotalDurationSeconds());
+        session.setIsCompleted(sessionData.getIsCompleted());
+        session.setEyeTrackingAvailable(sessionData.getEyeTrackingAvailable());
+        session.setFaceTrackingAvailable(sessionData.getFaceTrackingAvailable());
+        session.setUploadStatus(sessionData.getUploadStatus() != null ? sessionData.getUploadStatus() : "uploaded");
+        session.setRecordCount(sessionData.getRecordCount());
         session.setFileSizeBytes(dataFile.getSize());
         session.setAccount(account);
         session.setCollection(collection);
@@ -86,7 +84,7 @@ public class ComparisonSessionService {
         ComparisonSession savedSession = repository.save(session);
         log.info("Saved session with ID: {}", savedSession.getId());
 
-        return savedSession;
+        return toResponseDTO(savedSession);
     }
     /**
      * Get sessions for an account with pagination
@@ -151,7 +149,7 @@ public class ComparisonSessionService {
     /**
      * Convert entity to DTO
      */
-    private SessionResponseDTO toResponseDTO(ComparisonSession session) {
+    public SessionResponseDTO toResponseDTO(ComparisonSession session) {
         return SessionResponseDTO.builder()
                 .id(session.getId())
                 .clientSessionId(session.getClientSessionId())
