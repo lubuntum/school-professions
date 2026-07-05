@@ -9,6 +9,7 @@ import com.profession.suggest.database.services.auth.AccountService;
 import com.profession.suggest.database.services.dataanalys.comparison.ComparisonCollectionService;
 import com.profession.suggest.database.services.dataanalys.comparison.ComparisonSessionService;
 import com.profession.suggest.dto.dataanalys.comparison.CollectionResponseDTO;
+import com.profession.suggest.dto.dataanalys.comparison.SessionData;
 import com.profession.suggest.dto.dataanalys.comparison.SessionResponseDTO;
 import com.profession.suggest.dto.dataanalys.comparison.SessionSubmitRequest;
 import lombok.AllArgsConstructor;
@@ -59,10 +60,10 @@ public class ComparisonController {
     @PostMapping("/sessions")
     public ResponseEntity<?> submitSession(
             @RequestAttribute("accountId") Long accountId,
-            @ModelAttribute SessionSubmitRequest request) {
+            @RequestParam MultipartFile dataFile) {
         try {
             Account account = accountService.getAccountById(accountId);
-            ComparisonSession session = sessionService.submitSession(account, request);
+            SessionResponseDTO session = sessionService.submitSession(account, dataFile);
             return ResponseEntity.status(HttpStatus.CREATED).body(session);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -105,7 +106,7 @@ public class ComparisonController {
             @PathVariable Long sessionId) {
         try {
             Account account = accountService.getAccountById(accountId);
-            ComparisonSession session = sessionService.getSessionById(sessionId, account);
+            SessionResponseDTO session = sessionService.toResponseDTO(sessionService.getSessionById(sessionId, account));
             return ResponseEntity.ok(session);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -198,13 +199,19 @@ public class ComparisonController {
         }
     }
     /**
-     * Admin deletes a collection (and all samples/images)
+     * Admin deletes a collection (and all samples/images) but only if no sessions
      * DELETE /api/comparison/collections/{collectionId}
      */
     @HasRole(RoleEnum.ADMIN)
     @DeleteMapping("/collections/{collectionId}")
     public ResponseEntity<?> deleteCollection(@PathVariable Long collectionId) {
         try {
+            List<SessionResponseDTO> sessions = sessionService.getSessionsByCollection(collectionId);
+            if (!sessions.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("Cannot delete collection. It has " + sessions.size()
+                                + " completed session(s). Delete sessions first.");
+            }
             collectionService.deleteCollection(collectionId);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
