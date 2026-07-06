@@ -42,12 +42,12 @@ public class HRController {
             var response = companyService.createSpecialistWithCompany(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);  // ? 201 CREATED
         } catch (BadRequestException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error, please check request");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error, please check request params");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(e.getMessage());
+                    .body("Probably OGRN, INN or name duplicate error");
         }
     }
     /**
