@@ -67,6 +67,20 @@ public class AccountService {
         account.getRoles().add(role);
         return repository.save(account);
     }
+    public void updatePassword(Long accountId, String newPassword) throws AccountNotFoundException {
+        Account account = getAccountById(accountId);
+
+        if (newPassword == null || newPassword.isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be empty");
+        }
+
+        if (newPassword.length() < 6) {
+            throw new IllegalArgumentException("Password must be at least 6 characters");
+        }
+
+        account.setPassword(passwordEncoder.encode(newPassword));
+        repository.save(account);
+    }
 
     public PupilResponseDTO getPupilDataByAccountId(Long id) {
         return repository.findPupilDataByAccountId(id);

@@ -24,6 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/auth/protected-test",
                         "/api/psych-tests/**",
                         "/api/auth/account-roles",
+                        "/api/auth/update-password",
                         "/api/pupil-subjects/**",
 
                         "/api/pupils/pupil-data",
