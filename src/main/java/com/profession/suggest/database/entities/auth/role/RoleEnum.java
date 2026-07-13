@@ -6,5 +6,6 @@ public enum RoleEnum {
     DIRECTOR,
     PUPIL,
     SPECIALIST,
-    HR
+    HR,
+    EMPLOYEE
 }

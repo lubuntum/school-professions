@@ -105,6 +105,8 @@ public class SpecialistService {
 
         return specialists.stream()
                 .map(mapper::toCompleteDTO)
+                .filter(s -> !s.getRoles().contains(RoleEnum.EMPLOYEE)
+                        && s.getRoles().contains(RoleEnum.SPECIALIST)) // Added explicit check
                 .collect(Collectors.toList());
     }
     public Specialist getSpecialistById(Long id) {
