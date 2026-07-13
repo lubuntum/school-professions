@@ -50,8 +50,14 @@ public class AccountService {
         if (account.getFirstLogin()) account.setFirstLogin(false);
         return token;
     }
-    @Transactional
     public Account registration(AccountRegisterRequestDTO accountRegisterRequestDTO, RoleEnum defaultRole) throws BadRequestException {
+        if (defaultRole == null) {
+            throw new BadRequestException("Default role cannot be null");
+        }
+        return registration(accountRegisterRequestDTO, new RoleEnum[]{defaultRole});
+    }
+    @Transactional
+    public Account registration(AccountRegisterRequestDTO accountRegisterRequestDTO, RoleEnum ...roles) throws BadRequestException {
         if (accountRegisterRequestDTO == null || accountRegisterRequestDTO.getEmail() == null
                 || accountRegisterRequestDTO.getPassword() == null)
             throw new BadRequestException("Fill all fields");
@@ -60,11 +66,14 @@ public class AccountService {
         Account account = new Account();
         account.setEmail(accountRegisterRequestDTO.getEmail().toLowerCase());
         account.setPassword(passwordEncoder.encode(accountRegisterRequestDTO.getPassword()));
+        Set<Role> accountRoles = new HashSet<>();
+        for (RoleEnum roleName : roles) {
+            if (roleName == null) continue;
+            Role role = roleService.findByName(roleName);
+            accountRoles.add(role);
+        }
+        account.setRoles(accountRoles);
 
-        Role role = roleService.findByName(defaultRole);
-        if (account.getRoles() == null)
-            account.setRoles(new HashSet<>());
-        account.getRoles().add(role);
         return repository.save(account);
     }
     public void updatePassword(Long accountId, String newPassword) throws AccountNotFoundException {
