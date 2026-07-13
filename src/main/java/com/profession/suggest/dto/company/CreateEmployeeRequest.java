@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateSpecialistRequest {
+public class CreateEmployeeRequest {
     // Account fields
     private String email;
     private String password;
@@ -22,7 +22,4 @@ public class CreateSpecialistRequest {
     private String companyName;
     private String companyInn;
     private String companyOgrn;
-    private String companyAddress;
-    private String companyPhone;
-    private String companyEmail;
 }

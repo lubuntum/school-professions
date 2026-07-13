@@ -6,9 +6,9 @@ import com.profession.suggest.database.entities.users.specialist.Specialist;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CreateSpecialistMapper {
-    public CreateSpecialistResponse toDTO(Account account) {
-        CreateSpecialistResponse response = new CreateSpecialistResponse();
+public class CreateEmployeeMapper {
+    public CreateEmployeeResponse toDTO(Account account) {
+        CreateEmployeeResponse response = new CreateEmployeeResponse();
         response.setEmail(account.getEmail());
         response.setAccountId(account.getId());
 
