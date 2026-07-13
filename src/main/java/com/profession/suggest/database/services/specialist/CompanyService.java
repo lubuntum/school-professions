@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import javax.security.auth.login.AccountNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +28,7 @@ public class CompanyService {
     private final AccountService accountService;
     private final SpecialistService specialistService;
 
-    private final CreateSpecialistMapper createSpecialistMapper;
+    private final CreateEmployeeMapper createEmployeeMapper;
     private final SpecialistMapper specialistMapper;
     private final CompanyMapper companyMapper;
     private final EntityManager entityManager;
@@ -101,35 +100,66 @@ public class CompanyService {
                 .collect(Collectors.toList());
     }
 
-    public List<CreateSpecialistResponse> getHRsWithCompanies() {
-        Set<Account> accounts = accountService.getAccountsByRole(RoleEnum.HR);
-        return accounts.stream()
-                .map(createSpecialistMapper::toDTO)
+    /**
+     * Get all companies with ALL specialists (for Admin)
+     * More complete view
+     */
+    public List<CompanyWithEmployeesDTO> getCompaniesWithEmployees() {
+        List<Company> companies = repository.findAll();
+
+        return companies.stream()
+                .map(company -> {
+                    /*if there is any employees in company parse them, else just empty array */
+                    List<Employee> companyEmployees = company.getSpecialists() != null
+                            ? company.getSpecialists().stream()
+                            .map(specialist -> {
+                                Account account = specialist.getAccount();
+                                boolean isHR = account.getRoles().stream()
+                                        .anyMatch(role -> role.getName() == RoleEnum.HR);
+
+                                return Employee.builder()
+                                        .id(specialist.getId())
+                                        .fullName(specialist.getFullName())
+                                        .email(account.getEmail())
+                                        .role(isHR ? "HR" : "SPECIALIST")
+                                        .build();
+                            })
+                            .collect(Collectors.toList())
+                            : new ArrayList<>();
+
+                    return CompanyWithEmployeesDTO.builder()
+                            .id(company.getId())
+                            .name(company.getName())
+                            .inn(company.getInn())
+                            .ogrn(company.getOgrn())
+                            .address(company.getAddress())
+                            .phone(company.getPhone())
+                            .email(company.getEmail())
+                            .employees(companyEmployees)
+                            .employeesCount(companyEmployees.size())
+                            .build();
+                })
                 .collect(Collectors.toList());
-
     }
-    @Transactional
-    public CreateSpecialistResponse createSpecialistWithCompany(CreateSpecialistRequest request) throws BadRequestException, AccountNotFoundException {
-        // 1. Validate email
-        if (!accountService.isEmailFree(request.getEmail())) {
-            throw new BadRequestException("Email already in use: " + request.getEmail());
-        }
 
-        // 2. Find or create Company (SAVE IT IMMEDIATELY)
+    // ... rest of existing methods
+    @Transactional
+    public CreateEmployeeResponse createEmployeeForCompany(CreateEmployeeRequest request) throws BadRequestException, AccountNotFoundException {
+
+        // 2. Find Company
         Company company = repository.findByName(request.getCompanyName());
         if (company == null) {
-            company = createCompany(request);  // Returns saved company
+            throw new BadRequestException("Company not found: " + request.getCompanyName());
         }
-        RoleEnum role = request.getRole() == AllowedRole.HR
+        RoleEnum mainRole = request.getRole() == AllowedRole.HR
                 ? RoleEnum.HR
                 : RoleEnum.SPECIALIST;
-
+        RoleEnum employeeRole = RoleEnum.EMPLOYEE;
         // 3. Create Account with role
         AccountRegisterRequestDTO accountDTO = new AccountRegisterRequestDTO();
         accountDTO.setEmail(request.getEmail());
         accountDTO.setPassword(request.getPassword());
-        Account account = accountService.registration(accountDTO, role);
-
+        Account account = accountService.registration(accountDTO, mainRole, employeeRole);
         // 4. Create Specialist (HR profile) and link to company
         Specialist specialist = new Specialist();
         specialist.setAccount(account);
@@ -148,17 +178,23 @@ public class CompanyService {
         company.getSpecialists().add(savedSpecialist);
         repository.save(company);  // Save company with updated specialists list
         entityManager.refresh(account);
-        return createSpecialistMapper.toDTO(account);//with refreshed account data
+        return createEmployeeMapper.toDTO(account);//with refreshed account data
     }
 
-    private Company createCompany(CreateSpecialistRequest request) {
+    public Company createCompany(CompanyDTO companyDTO) {
+        if (companyDTO.getName() == null || companyDTO.getName().isEmpty()) {
+            throw new IllegalArgumentException("Company name is required");
+        }
+        if (repository.findByName(companyDTO.getName()) != null) {
+            throw new IllegalArgumentException("Company already exists: " + companyDTO.getName());
+        }
         Company company = new Company();
-        company.setName(request.getCompanyName());  // FIXED: Set name
-        company.setInn(request.getCompanyInn());
-        company.setOgrn(request.getCompanyOgrn());
-        company.setEmail(request.getCompanyEmail());
-        company.setAddress(request.getCompanyAddress());
-        company.setPhone(request.getCompanyPhone());
+        company.setName(companyDTO.getName());  // FIXED: Set name
+        company.setInn(companyDTO.getInn());
+        company.setOgrn(companyDTO.getOgrn());
+        company.setEmail(companyDTO.getEmail());
+        company.setAddress(companyDTO.getAddress());
+        company.setPhone(companyDTO.getPhone());
         return repository.save(company);  // FIXED: Save immediately
     }
 }

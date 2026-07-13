@@ -1,27 +1,38 @@
 package com.profession.suggest.controllers.company;
 
+import com.profession.suggest.configuration.security.annotation.HasRole;
+import com.profession.suggest.database.entities.auth.role.RoleEnum;
 import com.profession.suggest.database.services.auth.AccountService;
 import com.profession.suggest.database.services.specialist.CompanyService;
+import com.profession.suggest.dto.company.CompanyDTO;
 import com.profession.suggest.dto.specialist.SpecialistDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+/** TODO route create company*/
 @RestController
 @AllArgsConstructor
 @Slf4j
 @RequestMapping("/api/company")
 public class CompanyController {
-    private final AccountService accountService;
     private final CompanyService companyService;
-
+    @HasRole(RoleEnum.ADMIN)
+    @PostMapping()
+    public ResponseEntity<?> createCompany(@RequestAttribute("accountId") Long accountId,
+                                           @RequestBody CompanyDTO company) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(companyService.createCompany(company));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
     @GetMapping()
     public ResponseEntity<?> getMyCompany(@RequestAttribute("accountId") Long accountId) {
         try {
@@ -36,6 +47,7 @@ public class CompanyController {
     }
     /**
      * Return all connected specialists by account's company
+     * Deprecated too
      * */
     @GetMapping("/specialists")
     public ResponseEntity<?> getSpecialistsByCompany (@RequestAttribute("accountId") Long accountId) {
@@ -48,6 +60,15 @@ public class CompanyController {
             log.error("Error getting company specialists: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(e.getMessage());
+        }
+    }
+    @GetMapping("/companies-with-employees")
+    @HasRole(RoleEnum.ADMIN)
+    public ResponseEntity<?> getCompaniesWithHRs() {
+        try {
+            return ResponseEntity.ok(companyService.getCompaniesWithEmployees());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
