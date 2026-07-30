@@ -2,10 +2,9 @@ package com.profession.suggest.controllers.company;
 
 import com.profession.suggest.configuration.security.annotation.HasRole;
 import com.profession.suggest.database.entities.auth.role.RoleEnum;
-import com.profession.suggest.database.services.auth.AccountService;
 import com.profession.suggest.database.services.specialist.CompanyService;
 import com.profession.suggest.dto.company.CompanyDTO;
-import com.profession.suggest.dto.specialist.SpecialistDTO;
+import com.profession.suggest.dto.company.Employee;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -46,14 +45,14 @@ public class CompanyController {
         }
     }
     /**
-     * Return all connected specialists by account's company
-     * Deprecated too
+     * Return all  employees from company depends on requested account
+     *
      * */
-    @GetMapping("/specialists")
-    public ResponseEntity<?> getSpecialistsByCompany (@RequestAttribute("accountId") Long accountId) {
+    @GetMapping("/employees")
+    public ResponseEntity<?> getEmployeesByCompany (@RequestAttribute("accountId") Long accountId) {
         try {
-            List<SpecialistDTO> specialists = companyService.getSpecialistDTOsByHRAccountId(accountId);
-            return ResponseEntity.ok(specialists);
+            List<Employee> employees = companyService.getCompanyEmployeesByAccountId(accountId);
+            return ResponseEntity.ok(employees);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         } catch (Exception e) {

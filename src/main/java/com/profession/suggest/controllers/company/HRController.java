@@ -3,13 +3,15 @@ package com.profession.suggest.controllers.company;
 import com.profession.suggest.configuration.security.annotation.HasRole;
 import com.profession.suggest.database.entities.auth.role.RoleEnum;
 import com.profession.suggest.database.services.specialist.CompanyService;
-import com.profession.suggest.dto.company.AllowedRole;
 import com.profession.suggest.dto.company.CreateEmployeeRequest;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -24,7 +26,7 @@ public class HRController {
     public ResponseEntity<?> createHR(@RequestBody CreateEmployeeRequest request) {
         try {
             // Force role to HR for this endpoint
-            request.setRole(AllowedRole.HR);
+            request.setRoles(List.of(RoleEnum.HR));
             var response = companyService.createEmployeeForCompany(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);  // ? 201 CREATED
         } catch (BadRequestException e) {
@@ -40,15 +42,13 @@ public class HRController {
      * HR creates Specialist (regular employee) in their company
      */
     @HasRole({RoleEnum.HR, RoleEnum.ADMIN})
-    @PostMapping("/specialists")
-    public ResponseEntity<?> createSpecialist(
+    @PostMapping("/employee")
+    public ResponseEntity<?> createEmployee(
             @RequestAttribute("accountId") Long accountId,
             @RequestBody CreateEmployeeRequest request) {
         try {
-            // Force role to SPECIALIST (HR cannot create another HR)
-            request.setRole(AllowedRole.SPECIALIST);
-
-            // Optional: If companyName is not provided, use HR's company
+            if (request.getRoles() == null || request.getRoles().size() == 0)
+                request.setRoles(List.of(RoleEnum.SPECIALIST));
             if (request.getCompanyName() == null || request.getCompanyName().isEmpty()) {
                 var company = companyService.getCompanyByAccountId(accountId);
                 request.setCompanyName(company.getName());
