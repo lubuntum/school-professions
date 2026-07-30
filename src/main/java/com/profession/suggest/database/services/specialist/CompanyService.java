@@ -1,14 +1,16 @@
 package com.profession.suggest.database.services.specialist;
 
 import com.profession.suggest.database.entities.auth.Account;
+import com.profession.suggest.database.entities.auth.role.Role;
 import com.profession.suggest.database.entities.auth.role.RoleEnum;
+import com.profession.suggest.database.entities.gender.Gender;
+import com.profession.suggest.database.entities.professions.Profession;
 import com.profession.suggest.database.entities.users.specialist.Company;
 import com.profession.suggest.database.entities.users.specialist.Specialist;
 import com.profession.suggest.database.repositories.specialist.CompanyRepository;
 import com.profession.suggest.database.services.auth.AccountService;
 import com.profession.suggest.dto.auth.AccountRegisterRequestDTO;
 import com.profession.suggest.dto.company.*;
-import com.profession.suggest.dto.specialist.SpecialistDTO;
 import com.profession.suggest.dto.specialist.SpecialistMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -63,40 +65,34 @@ public class CompanyService {
                 .orElseThrow(() -> new IllegalArgumentException("Company not found"));
         return company.getSpecialists();
     }
-    public List<Specialist> getSpecialistsByHRAccountId(Long accountId) throws AccountNotFoundException {
-        // 1. Get account
-        Account account = accountService.getAccountById(accountId);
-
-        // 2. Check if user is a specialist
-        Specialist hrSpecialist = account.getSpecialist();
-        if (hrSpecialist == null) {
-            throw new IllegalArgumentException("User is not a specialist");
-        }
-
-        // 3. Check if user is HR (optional but recommended)
-        boolean isHR = account.getRoles().stream()
-                .anyMatch(role -> role.getName() == RoleEnum.HR);
-        if (!isHR) {
-            throw new IllegalArgumentException("User is not an HR");
-        }
-
-        // 4. Get company
-        Company company = hrSpecialist.getCompany();
-        if (company == null) {
-            throw new IllegalArgumentException("HR has no company assigned");
-        }
-
-        // 5. Return all specialists in the company (including the HR)
-        return company.getSpecialists();
-    }
     /**
-     * Get all specialists in a company with their account info
+     * Get all employees in a company with their account info (roles)
      * Returns DTOs instead of entities for better control
      */
-    public List<SpecialistDTO> getSpecialistDTOsByHRAccountId(Long accountId) throws AccountNotFoundException {
-        List<Specialist> specialists = getSpecialistsByHRAccountId(accountId);
+    public List<Employee> getCompanyEmployeesByAccountId(Long accountId) throws AccountNotFoundException {
+        Account account = accountService.getAccountById(accountId);
+        List<Specialist> specialists = account.getSpecialist().getCompany().getSpecialists();
+        if (specialists == null || specialists.size() == 0) return new ArrayList<Employee>();
         return specialists.stream()
-                .map(specialist -> specialistMapper.toDTO(specialist, specialist.getAccount()))
+                .map(s -> {
+                    List<RoleEnum> roles = s.getAccount().getRoles().stream()
+                            .map(Role::getName)
+                            .toList();
+                    Profession profession = s.getProfession();
+                    Gender gender = s.getGender();
+                    return Employee.builder()
+                            .id(s.getId())
+                            .fullName(s.getFullName())
+                            .email(s.getAccount().getEmail())
+                            .roles(roles)
+                            .contactEmail(s.getContactEmail())
+                            .contactPhone(s.getContactPhone())
+                            .experience(s.getExperience())
+                            .jobSatisfaction(s.getJobSatisfaction())
+                            .profession(profession != null ? profession.getName() : null)
+                            .gender(gender != null ? gender.getName() : null)
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 
@@ -114,14 +110,15 @@ public class CompanyService {
                             ? company.getSpecialists().stream()
                             .map(specialist -> {
                                 Account account = specialist.getAccount();
-                                boolean isHR = account.getRoles().stream()
-                                        .anyMatch(role -> role.getName() == RoleEnum.HR);
+                                List<RoleEnum> roles = account.getRoles().stream()
+                                        .map(Role::getName)
+                                        .toList();
 
                                 return Employee.builder()
                                         .id(specialist.getId())
                                         .fullName(specialist.getFullName())
                                         .email(account.getEmail())
-                                        .role(isHR ? "HR" : "SPECIALIST")
+                                        .roles(roles)
                                         .build();
                             })
                             .collect(Collectors.toList())
@@ -151,15 +148,15 @@ public class CompanyService {
         if (company == null) {
             throw new BadRequestException("Company not found: " + request.getCompanyName());
         }
-        RoleEnum mainRole = request.getRole() == AllowedRole.HR
-                ? RoleEnum.HR
-                : RoleEnum.SPECIALIST;
-        RoleEnum employeeRole = RoleEnum.EMPLOYEE;
+
         // 3. Create Account with role
         AccountRegisterRequestDTO accountDTO = new AccountRegisterRequestDTO();
         accountDTO.setEmail(request.getEmail());
         accountDTO.setPassword(request.getPassword());
-        Account account = accountService.registration(accountDTO, mainRole, employeeRole);
+        if (request.getRoles().stream().noneMatch(r -> r.name().equals(RoleEnum.SPECIALIST.name())))
+            request.getRoles().add(RoleEnum.SPECIALIST);
+
+        Account account = accountService.registration(accountDTO, request.getRoles().toArray(RoleEnum[]::new));
         // 4. Create Specialist (HR profile) and link to company
         Specialist specialist = new Specialist();
         specialist.setAccount(account);
@@ -197,4 +194,5 @@ public class CompanyService {
         company.setPhone(companyDTO.getPhone());
         return repository.save(company);  // FIXED: Save immediately
     }
+
 }
