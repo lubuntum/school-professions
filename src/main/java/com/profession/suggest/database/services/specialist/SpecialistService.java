@@ -104,9 +104,9 @@ public class SpecialistService {
         List<Specialist> specialists = repository.findByAccountCreatedAtBetween(startDate, endDate);
 
         return specialists.stream()
+                .filter(s -> s.getCompany() == null)
                 .map(mapper::toCompleteDTO)
-                .filter(s -> !s.getRoles().contains(RoleEnum.EMPLOYEE)
-                        && s.getRoles().contains(RoleEnum.SPECIALIST)) // Added explicit check
+                .filter(s -> s.getRoles().contains(RoleEnum.SPECIALIST)) // Added explicit check
                 .collect(Collectors.toList());
     }
     public Specialist getSpecialistById(Long id) {
