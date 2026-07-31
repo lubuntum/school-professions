@@ -16,6 +16,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import jakarta.persistence.criteria.Join;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.login.AccountNotFoundException;
@@ -39,22 +43,15 @@ public class CompanyService {
      * Get company by account ID
      * Checks if user is a specialist and has a company
      */
-    public CompanyDTO getCompanyByAccountId(Long accountId) throws AccountNotFoundException {
+    public Company getCompanyByAccountId(Long accountId) throws AccountNotFoundException {
         Account account = accountService.getAccountById(accountId);
-
-        // Check if user is a specialist
         Specialist specialist = account.getSpecialist();
-        if (specialist == null) {
-            throw new IllegalArgumentException("User is not a specialist");
-        }
-
         // Check if user has a company
         Company company = specialist.getCompany();
         if (company == null) {
             throw new IllegalArgumentException("No company assigned to this user");
         }
-
-        return companyMapper.toDTO(company);
+        return company; // Return the raw entity for other services
     }
 
     /**
@@ -66,14 +63,24 @@ public class CompanyService {
         return company.getSpecialists();
     }
     /**
-     * Get all employees in a company with their account info (roles)
+     * Get paginated employees in a company with their account info (roles)
      * Returns DTOs instead of entities for better control
      */
-    public List<Employee> getCompanyEmployeesByAccountId(Long accountId) throws AccountNotFoundException {
-        Account account = accountService.getAccountById(accountId);
-        List<Specialist> specialists = account.getSpecialist().getCompany().getSpecialists();
-        if (specialists == null || specialists.size() == 0) return new ArrayList<Employee>();
-        return specialists.stream()
+    public Page<Employee> getEmployeesByCompanyId(Long companyId, RoleEnum role, Pageable pageable) throws AccountNotFoundException {
+        Specification<Specialist> spec = (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
+        if (companyId != null)
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("company").get("id"), companyId));
+        if (role != null && !role.name().trim().isEmpty())
+            spec = spec.and((root, query, criteriaBuilder) -> {
+                query.distinct(true);
+                Join<Specialist, Account> accountJoin = root.join("account");
+                Join<Account, Role> roleJoin = accountJoin.join("roles");
+                return criteriaBuilder.equal(criteriaBuilder.lower(roleJoin.get("name")), role.name().toLowerCase());
+            });
+
+        Page<Specialist> specialistsPage = specialistService.getSpecialists(pageable, spec);
+        return specialistsPage
                 .map(s -> {
                     List<RoleEnum> roles = s.getAccount().getRoles().stream()
                             .map(Role::getName)
@@ -92,8 +99,7 @@ public class CompanyService {
                             .profession(profession != null ? profession.getName() : null)
                             .gender(gender != null ? gender.getName() : null)
                             .build();
-                })
-                .collect(Collectors.toList());
+                });
     }
 
     /**

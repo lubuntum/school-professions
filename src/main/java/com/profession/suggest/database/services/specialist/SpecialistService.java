@@ -16,6 +16,7 @@ import com.profession.suggest.dto.specialist.SpecialistMapper;
 import com.profession.suggest.dto.specialist.SpecialistRegisterRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -40,6 +41,9 @@ public class SpecialistService {
     }
     public Page<SpecialistDTO> getSpecialistsPage(Pageable pageable) {
         return repository.findSpecialists(pageable);
+    }
+    public Page<Specialist> getSpecialists(Pageable pageable, Specification<Specialist> specification) {
+        return repository.findAll(specification, pageable);
     }
     //TODO check if profession is null
     public SpecialistDTO create(SpecialistDTO dto, Account account) {
